@@ -1,0 +1,8 @@
+{
+  "_meta": { "lang": "en", "app": "terminal", "version": "1.0.0" },
+  "title": "Terminal",
+  "welcome": "πOS Terminal v1.0",
+  "help_hint": "Type 'help' for available commands",
+  "empty_dir": "(empty directory)",
+  "cmd_not_found": "{cmd}: command not found. Type 'help' for available commands."
+}

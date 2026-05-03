@@ -1,0 +1,11 @@
+{
+  "id":         "settings",
+  "version":    "1.0.0",
+  "minOsVer":   "1.0.0",
+  "entry":      "app.js",
+  "icon":       "icon.svg",
+  "permissions": ["fs.read", "fs.write", "system"],
+  "background": false,
+  "autostart":  false,
+  "category":   "system"
+}

@@ -1,0 +1,43 @@
+{
+  "_meta": { "lang": "en", "app": "notepad", "version": "1.0.0" },
+  "title": "Notepad",
+  "menu": {
+    "file": "File", "edit": "Edit", "view": "View"
+  },
+  "file": {
+    "new":      "New (Ctrl+N)",
+    "open":     "Open (Ctrl+O)",
+    "save":     "Save (Ctrl+S)",
+    "save_as":  "Save As",
+    "close":    "Close"
+  },
+  "edit": {
+    "undo":       "Undo (Ctrl+Z)",
+    "cut":        "Cut",
+    "copy":       "Copy",
+    "paste":      "Paste",
+    "select_all": "Select All"
+  },
+  "view": {
+    "font_larger":  "Font Size +",
+    "font_smaller": "Font Size -",
+    "dark_mode":    "Dark Mode",
+    "light_mode":   "Light Mode"
+  },
+  "status": {
+    "ready":    "Ready | UTF-8",
+    "modified": "[Modified]",
+    "line_col": "Ln {line}, Ch {chars} | UTF-8"
+  },
+  "dialog": {
+    "save_path":      "Save path:",
+    "save_default":   "/Documents/untitled.txt",
+    "open_path":      "Open path:",
+    "open_default":   "/Documents/",
+    "unsaved_confirm":"Unsaved changes. Continue?",
+    "save_fail":      "Save failed: {msg}",
+    "open_fail":      "Cannot open file: {msg}",
+    "untitled":       "Untitled — Notepad"
+  },
+  "placeholder": "Type here..."
+}

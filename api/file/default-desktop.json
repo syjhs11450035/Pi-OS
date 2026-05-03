@@ -1,0 +1,22 @@
+{
+  "_comment": "πOS 預設桌面配置",
+  "endpoint": "/api/file/default-desktop",
+  "version": "1.0",
+  "wallpaper": {
+    "type": "gradient",
+    "value": "linear-gradient(135deg,#0f0c29,#302b63,#24243e)"
+  },
+  "icons": [
+    { "label": "檔案總管", "icon": "📁", "appId": "explorer", "position": { "col": 0, "row": 0 } },
+    { "label": "記事本",   "icon": "📝", "appId": "notepad",  "position": { "col": 0, "row": 1 } },
+    { "label": "終端機",   "icon": "⬛", "appId": "terminal", "position": { "col": 0, "row": 2 } },
+    { "label": "瀏覽器",   "icon": "🌐", "appId": "browser",  "position": { "col": 0, "row": 3 } },
+    { "label": "虛擬機",   "icon": "💻", "appId": "vm",       "position": { "col": 0, "row": 4 } },
+    { "label": "設定",     "icon": "⚙️", "appId": "settings", "position": { "col": 0, "row": 5 } }
+  ],
+  "taskbar": {
+    "position": "bottom",
+    "height": 48,
+    "pinnedApps": ["explorer", "browser", "terminal"]
+  }
+}

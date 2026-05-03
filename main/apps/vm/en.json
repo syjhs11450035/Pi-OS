@@ -1,0 +1,9 @@
+{
+  "_meta": { "lang": "en", "app": "vm", "version": "1.0.0" },
+  "title": "Virtual Machine",
+  "toolbar": { "start": "Start", "stop": "Stop", "reset": "Reset", "fullscreen": "Fullscreen", "load_iso": "Load ISO" },
+  "status": { "idle": "Idle", "loading_engine": "Loading v86 engine...", "init": "Initializing VM...", "running": "Running — {label}", "stopped": "Stopped", "error": "Error: {msg}", "resetting": "Resetting..." },
+  "placeholder": { "title": "x86 Virtual Machine", "desc": "Uses WebAssembly v86 to run real x86 code in the browser.\nSelect an OS and click Start.", "warning": "First launch requires downloading image (~5-30MB)", "tech": "Technology: WebAssembly · SharedArrayBuffer · Canvas VGA\nSupports: DOS .exe · Linux ELF · ARM (planned)" },
+  "error": { "title": "Cannot start virtual machine", "reasons": "Possible reasons:\n- HTTPS required (SharedArrayBuffer restriction)\n- COOP/COEP HTTP headers required\n- Cannot connect to copy.sh\n\nFor local dev use:\nnpx serve -H '{\"Cross-Origin-Opener-Policy\":\"same-origin\",\"Cross-Origin-Embedder-Policy\":\"require-corp\"}'", "engine_fail": "Cannot load v86 engine" },
+  "iso": { "prompt": "Enter ISO/IMG image URL:", "custom_label": "Custom: {name}" }
+}

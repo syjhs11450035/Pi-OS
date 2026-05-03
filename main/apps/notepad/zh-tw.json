@@ -1,0 +1,43 @@
+{
+  "_meta": { "lang": "zh-tw", "app": "notepad", "version": "1.0.0" },
+  "title": "記事本",
+  "menu": {
+    "file": "檔案", "edit": "編輯", "view": "檢視"
+  },
+  "file": {
+    "new":      "新增 (Ctrl+N)",
+    "open":     "開啟 (Ctrl+O)",
+    "save":     "儲存 (Ctrl+S)",
+    "save_as":  "另存新檔",
+    "close":    "關閉"
+  },
+  "edit": {
+    "undo":       "復原 (Ctrl+Z)",
+    "cut":        "剪下",
+    "copy":       "複製",
+    "paste":      "貼上",
+    "select_all": "全選"
+  },
+  "view": {
+    "font_larger":  "字型大小 +",
+    "font_smaller": "字型大小 -",
+    "dark_mode":    "深色模式",
+    "light_mode":   "淺色模式"
+  },
+  "status": {
+    "ready":    "就緒 | UTF-8",
+    "modified": "[已修改]",
+    "line_col": "行 {line}，字元 {chars} | UTF-8"
+  },
+  "dialog": {
+    "save_path":      "儲存路徑：",
+    "save_default":   "/Documents/未命名.txt",
+    "open_path":      "開啟路徑：",
+    "open_default":   "/Documents/",
+    "unsaved_confirm":"有未儲存的變更，確定要繼續？",
+    "save_fail":      "儲存失敗：{msg}",
+    "open_fail":      "無法開啟檔案：{msg}",
+    "untitled":       "未命名 — 記事本"
+  },
+  "placeholder": "在此輸入文字..."
+}

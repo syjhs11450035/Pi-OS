@@ -1,0 +1,6 @@
+{
+  "_meta": { "lang": "zh-tw", "app": "browser", "version": "1.0.0" },
+  "title": "瀏覽器",
+  "status": { "ready": "就緒", "loading": "載入中...", "loaded": "已載入", "loaded_cross": "已載入（跨域）", "reload": "重新載入中..." },
+  "bookmark": { "name_prompt": "書籤名稱：", "cors_note": "部分網站因 CORS/CSP 限制無法在 iframe 中載入" }
+}

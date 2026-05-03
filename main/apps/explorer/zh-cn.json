@@ -1,0 +1,41 @@
+{
+  "_meta": { "lang": "zh-cn", "app": "explorer", "version": "1.0.0" },
+  "title": "文件资源管理器",
+  "sidebar": {
+    "desktop":   "桌面",
+    "documents": "文档",
+    "downloads": "下载",
+    "root":      "根目录"
+  },
+  "toolbar": {
+    "up":         "上级",
+    "back":       "后退",
+    "refresh":    "刷新",
+    "new_folder": "新建文件夹",
+    "new_file":   "新建文件"
+  },
+  "files": {
+    "loading":    "加载中...",
+    "empty":      "（空文件夹）",
+    "error":      "错误："
+  },
+  "ctx": {
+    "open":   "打开",
+    "rename": "重命名",
+    "delete": "删除",
+    "info":   "属性"
+  },
+  "dialog": {
+    "rename_prompt":  "新名称：",
+    "delete_confirm": "确定要删除「{name}」？",
+    "new_folder_prompt": "文件夹名称：",
+    "new_file_prompt":   "文件名：",
+    "new_file_default":  "新文本文件.txt",
+    "open_unsupported":  "无法打开：{name}\n（不支持的文件类型）",
+    "rename_fail":       "重命名失败：{msg}",
+    "delete_fail":       "删除失败：{msg}",
+    "info_text":         "名称：{name}\n路径：{path}\n类型：{type}\n大小：{size}\n修改时间：{modified}",
+    "type_dir":          "文件夹",
+    "type_file":         "文件"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "_meta": { "lang": "zh-cn", "app": "browser", "version": "1.0.0" },
+  "title": "浏览器",
+  "status": { "ready": "就绪", "loading": "加载中...", "loaded": "已加载", "loaded_cross": "已加载（跨域）", "reload": "重新加载中..." },
+  "bookmark": { "name_prompt": "书签名称：", "cors_note": "部分网站因 CORS/CSP 限制无法在 iframe 中加载" }
+}

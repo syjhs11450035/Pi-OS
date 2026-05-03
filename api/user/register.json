@@ -1,0 +1,32 @@
+{
+  "_comment": "πOS 使用者註冊 API 定義",
+  "endpoint": "/api/user/register",
+  "method": "POST",
+  "description": "新使用者註冊，建立個人 VFS 目錄",
+  "request": {
+    "username": "string (3-20 chars)",
+    "password": "string (min 8 chars, hashed)",
+    "email": "string (optional)"
+  },
+  "response": {
+    "success": {
+      "status": 201,
+      "message": "註冊成功",
+      "user": {
+        "id": "string",
+        "username": "string",
+        "homePath": "/home/{username}"
+      },
+      "defaultDirs": [
+        "/home/{username}/Desktop",
+        "/home/{username}/Documents",
+        "/home/{username}/Downloads",
+        "/home/{username}/Pictures"
+      ]
+    },
+    "error": {
+      "status": 409,
+      "message": "使用者名稱已存在"
+    }
+  }
+}

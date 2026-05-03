@@ -1,0 +1,50 @@
+{
+  "_comment": "πOS 預設桌布清單",
+  "endpoint": "/api/file/default-wallpapers",
+  "version": "1.0",
+  "wallpapers": [
+    {
+      "id": "midnight-blue",
+      "label": "深夜藍",
+      "type": "gradient",
+      "value": "linear-gradient(135deg,#0f0c29,#302b63,#24243e)",
+      "default": true
+    },
+    {
+      "id": "aurora",
+      "label": "極光",
+      "type": "gradient",
+      "value": "linear-gradient(135deg,#0f2027,#203a43,#2c5364)"
+    },
+    {
+      "id": "sunset",
+      "label": "日落",
+      "type": "gradient",
+      "value": "linear-gradient(135deg,#f093fb,#f5576c,#4facfe)"
+    },
+    {
+      "id": "forest",
+      "label": "森林",
+      "type": "gradient",
+      "value": "linear-gradient(135deg,#134e5e,#71b280)"
+    },
+    {
+      "id": "flame",
+      "label": "火焰",
+      "type": "gradient",
+      "value": "linear-gradient(135deg,#f7971e,#ffd200,#f7971e)"
+    },
+    {
+      "id": "pure-black",
+      "label": "純黑",
+      "type": "solid",
+      "value": "#000000"
+    },
+    {
+      "id": "dark-gray",
+      "label": "深灰",
+      "type": "solid",
+      "value": "#1a1a2e"
+    }
+  ]
+}

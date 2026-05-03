@@ -1,0 +1,49 @@
+{
+  "_meta": { "lang": "zh-tw", "name": "繁體中文", "version": "1.0.0", "builtin": true },
+  "system": {
+    "name": "πOS",
+    "shutdown": "關機",
+    "restart": "重新啟動",
+    "loading": "載入中...",
+    "booting": "正在啟動...",
+    "welcome": "歡迎使用 πOS"
+  },
+  "boot": {
+    "step_kernel":  "初始化核心...",
+    "step_vfs":     "掛載虛擬檔案系統...",
+    "step_desktop": "載入桌面環境...",
+    "step_apps":    "啟動應用程式服務...",
+    "step_done":    "歡迎使用 πOS"
+  },
+  "desktop": {
+    "new_folder":    "新增資料夾",
+    "new_file":      "新增文字檔",
+    "refresh":       "重新整理",
+    "display_settings": "顯示設定",
+    "open":          "開啟",
+    "pin_taskbar":   "釘選到工作列",
+    "folder_name_prompt": "資料夾名稱：",
+    "file_name_prompt":   "檔案名稱（含副檔名）："
+  },
+  "taskbar": {
+    "search_placeholder": "搜尋程式...",
+    "user": "使用者"
+  },
+  "wm": {
+    "minimize":  "最小化",
+    "maximize":  "最大化",
+    "restore":   "還原",
+    "close":     "關閉"
+  },
+  "ctx": {
+    "open":    "開啟",
+    "rename":  "重新命名",
+    "delete":  "刪除",
+    "info":    "內容",
+    "refresh": "重新整理",
+    "new_folder": "新增資料夾",
+    "new_file":   "新增文字檔",
+    "display_settings": "顯示設定",
+    "pin_taskbar": "釘選到工作列"
+  }
+}

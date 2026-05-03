@@ -1,0 +1,9 @@
+{
+  "_meta": { "lang": "zh-cn", "app": "vm", "version": "1.0.0" },
+  "title": "虚拟机",
+  "toolbar": { "start": "启动", "stop": "停止", "reset": "重置", "fullscreen": "全屏", "load_iso": "加载 ISO" },
+  "status": { "idle": "未启动", "loading_engine": "下载 v86 引擎...", "init": "初始化虚拟机...", "running": "运行中 — {label}", "stopped": "已停止", "error": "错误：{msg}", "resetting": "重置中..." },
+  "placeholder": { "title": "x86 虚拟机", "desc": "使用 WebAssembly v86 在浏览器中运行真实 x86 代码。\n选择操作系统后点击「启动」。", "warning": "首次启动需下载镜像文件（约 5-30MB）", "tech": "支持技术：WebAssembly · SharedArrayBuffer · Canvas VGA\n可运行：DOS .exe · Linux ELF · ARM (规划中)" },
+  "error": { "title": "无法启动虚拟机", "reasons": "可能原因：\n- 需要 HTTPS 环境（SharedArrayBuffer 限制）\n- 需要设置 COOP/COEP HTTP 标头\n- 网络无法连接到 copy.sh", "engine_fail": "无法加载 v86 引擎" },
+  "iso": { "prompt": "输入 ISO/IMG 镜像文件 URL：", "custom_label": "自定义：{name}" }
+}

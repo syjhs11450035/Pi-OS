@@ -1,0 +1,49 @@
+{
+  "_meta": { "lang": "en", "name": "English", "version": "1.0.0", "builtin": true },
+  "system": {
+    "name": "πOS",
+    "shutdown": "Shut Down",
+    "restart": "Restart",
+    "loading": "Loading...",
+    "booting": "Starting...",
+    "welcome": "Welcome to πOS"
+  },
+  "boot": {
+    "step_kernel":  "Initializing kernel...",
+    "step_vfs":     "Mounting virtual filesystem...",
+    "step_desktop": "Loading desktop environment...",
+    "step_apps":    "Starting application services...",
+    "step_done":    "Welcome to πOS"
+  },
+  "desktop": {
+    "new_folder":    "New Folder",
+    "new_file":      "New Text File",
+    "refresh":       "Refresh",
+    "display_settings": "Display Settings",
+    "open":          "Open",
+    "pin_taskbar":   "Pin to Taskbar",
+    "folder_name_prompt": "Folder name:",
+    "file_name_prompt":   "File name (with extension):"
+  },
+  "taskbar": {
+    "search_placeholder": "Search apps...",
+    "user": "User"
+  },
+  "wm": {
+    "minimize":  "Minimize",
+    "maximize":  "Maximize",
+    "restore":   "Restore",
+    "close":     "Close"
+  },
+  "ctx": {
+    "open":    "Open",
+    "rename":  "Rename",
+    "delete":  "Delete",
+    "info":    "Properties",
+    "refresh": "Refresh",
+    "new_folder": "New Folder",
+    "new_file":   "New Text File",
+    "display_settings": "Display Settings",
+    "pin_taskbar": "Pin to Taskbar"
+  }
+}

@@ -1,0 +1,72 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="720"
+    height="540" viewBox="0,0,720,540">
+    <defs>
+        <linearGradient x1="8" y1="-52" x2="472" y2="412" gradientUnits="userSpaceOnUse" id="color-1">
+            <stop offset="0" stop-color="#0078d4" />
+            <stop offset="0.45" stop-color="#1b4fd8" />
+            <stop offset="1" stop-color="#6b2fd9" />
+        </linearGradient>
+        <linearGradient x1="8" y1="-52" x2="8" y2="180" gradientUnits="userSpaceOnUse" id="color-2">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.28" />
+            <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06" />
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+        </linearGradient>
+        <radialGradient cx="240" cy="132" r="264" gradientUnits="userSpaceOnUse" id="color-3">
+            <stop offset="0" stop-color="#60b0ff" stop-opacity="0.35" />
+            <stop offset="1" stop-color="#0040a0" stop-opacity="0" />
+        </radialGradient>
+        <linearGradient x1="156.25702" y1="72.01563" x2="156.25702" y2="287.98438" gradientUnits="userSpaceOnUse"
+            id="color-4">
+            <stop offset="0" stop-color="#ffffff" />
+            <stop offset="1" stop-color="#d0e8ff" stop-opacity="0.92" />
+        </linearGradient>
+        <linearGradient x1="351.29002" y1="87.44197" x2="351.29002" y2="272.55804" gradientUnits="userSpaceOnUse"
+            id="color-5">
+            <stop offset="0" stop-color="#ffffff" />
+            <stop offset="1" stop-color="#d0e8ff" stop-opacity="0.92" />
+        </linearGradient>
+        <linearGradient x1="98.95919" y1="102.86831" x2="98.95919" y2="72.01563" gradientUnits="userSpaceOnUse"
+            id="color-6">
+            <stop offset="0" stop-color="#ffffff" />
+            <stop offset="1" stop-color="#d1e9ff" />
+        </linearGradient>
+        <clipPath id="clip-1">
+            <path d="M-120,450v-540h720v540z" fill="none" stroke="none" stroke-width="1" stroke-linecap="butt"
+                stroke-linejoin="miter" />
+        </clipPath>
+    </defs>
+    <g transform="translate(120,90)">
+        <g stroke-miterlimit="10">
+            <g clip-path="url(#clip-1)">
+                <path
+                    d="M116,412c-59.64675,0 -108,-48.35325 -108,-108v-248c0,-59.64675 48.35325,-108 108,-108h248c59.64675,0 108,48.35325 108,108v248c0,59.64675 -48.35325,108 -108,108z"
+                    fill="url(#color-1)" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" />
+                <path
+                    d="M116,412c-59.64675,0 -108,-48.35325 -108,-108v-248c0,-59.64675 48.35325,-108 108,-108h248c59.64675,0 108,48.35325 108,108v248c0,59.64675 -48.35325,108 -108,108z"
+                    fill="none" stroke-opacity="0.18" stroke="#ffffff" stroke-width="1.5" stroke-linecap="butt"
+                    stroke-linejoin="miter" />
+                <path
+                    d="M116,180c-59.64675,0 -108,-48.35325 -108,-108v-16c0,-59.64675 48.35325,-108 108,-108h248c59.64675,0 108,48.35325 108,108v16c0,59.64675 -48.35325,108 -108,108z"
+                    fill="url(#color-2)" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" />
+                <path
+                    d="M0,180c0,-132.54834 107.45166,-240 240,-240c132.54834,0 240,107.45166 240,240c0,132.54834 -107.45166,240 -240,240c-132.54834,0 -240,-107.45166 -240,-240z"
+                    fill="url(#color-3)" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter"
+                    opacity="0.6" />
+                <g>
+                    <path
+                        d="M171.68336,287.98438c-8.51973,0 -15.42634,-6.9066 -15.42634,-15.42634v-185.11607c0,-8.51972 6.90661,-15.42634 15.42634,-15.42634v0c8.51973,0 15.42634,6.90662 15.42634,15.42634v185.11607c0,8.51974 -6.9066,15.42634 -15.42634,15.42634z"
+                        fill="url(#color-4)" stroke="none" stroke-width="1" stroke-linecap="butt"
+                        stroke-linejoin="miter" />
+                    <path
+                        d="M351.29002,257.13169c-8.81505,10.28422 -21.30304,15.42634 -37.46397,15.42634c-30.85268,0 -46.27902,-19.83387 -46.27902,-59.5016v-125.61448h30.85268"
+                        fill="none" stroke="url(#color-5)" stroke-width="28" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path
+                        d="M365.61448,72.01563c8.51974,0 15.42634,6.90662 15.42634,15.42634v0c0,8.51973 -6.9066,15.42634 -15.42634,15.42634h-251.22895c-8.51972,0 -15.42634,-6.90661 -15.42634,-15.42634v0c0,-8.51972 6.90662,-15.42634 15.42634,-15.42634z"
+                        fill="url(#color-6)" stroke="none" stroke-width="1" stroke-linecap="butt"
+                        stroke-linejoin="miter" />
+                </g>
+            </g>
+        </g>
+    </g>
+</svg><!--rotationCenter:360:270-->

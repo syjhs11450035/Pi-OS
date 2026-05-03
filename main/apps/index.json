@@ -1,0 +1,12 @@
+{
+  "_comment": "πOS 應用程式清單 — AppLoader 啟動時讀取此檔案",
+  "version": "1.0.0",
+  "apps": [
+    "explorer",
+    "notepad",
+    "terminal",
+    "browser",
+    "vm",
+    "settings"
+  ]
+}

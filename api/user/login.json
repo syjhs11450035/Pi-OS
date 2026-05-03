@@ -1,0 +1,26 @@
+{
+  "_comment": "πOS 使用者登入 API 定義",
+  "endpoint": "/api/user/login",
+  "method": "POST",
+  "description": "使用者登入，回傳 session token",
+  "request": {
+    "username": "string",
+    "password": "string (hashed)"
+  },
+  "response": {
+    "success": {
+      "status": 200,
+      "token": "string (JWT)",
+      "user": {
+        "id": "string",
+        "username": "string",
+        "avatar": "string (url)",
+        "homePath": "/home/{username}"
+      }
+    },
+    "error": {
+      "status": 401,
+      "message": "帳號或密碼錯誤"
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "_comment": "πOS 預安裝環境定義（系統內建應用程式清單）",
+  "endpoint": "/api/file/install-env",
+  "version": "1.0",
+  "builtinApps": [
+    {
+      "id": "explorer",
+      "title": "檔案總管",
+      "icon": "📁",
+      "path": "/main/os/apps/explorer.js",
+      "category": "system",
+      "pinned": true
+    },
+    {
+      "id": "notepad",
+      "title": "記事本",
+      "icon": "📝",
+      "path": "/main/os/apps/notepad.js",
+      "category": "productivity"
+    },
+    {
+      "id": "terminal",
+      "title": "終端機",
+      "icon": "⬛",
+      "path": "/main/os/apps/terminal.js",
+      "category": "system",
+      "pinned": true
+    },
+    {
+      "id": "browser",
+      "title": "瀏覽器",
+      "icon": "🌐",
+      "path": "/main/os/apps/browser.js",
+      "category": "internet",
+      "pinned": true
+    },
+    {
+      "id": "vm",
+      "title": "虛擬機",
+      "icon": "💻",
+      "path": "/main/os/apps/vm.js",
+      "category": "system"
+    },
+    {
+      "id": "settings",
+      "title": "設定",
+      "icon": "⚙️",
+      "path": "/main/os/apps/settings.js",
+      "category": "system"
+    }
+  ],
+  "systemRequirements": {
+    "browser": "Chrome 90+ / Firefox 88+ / Edge 90+",
+    "features": ["IndexedDB", "WebAssembly", "Canvas2D", "ES2020"]
+  }
+}

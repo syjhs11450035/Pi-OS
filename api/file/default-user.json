@@ -1,0 +1,34 @@
+{
+  "_comment": "πOS 預設使用者環境設定",
+  "endpoint": "/api/file/default-user",
+  "version": "1.0",
+  "profile": {
+    "username": "使用者",
+    "avatar": "👤",
+    "language": "zh-TW",
+    "timezone": "Asia/Taipei"
+  },
+  "filesystem": {
+    "rootDirs": [
+      { "path": "/",            "type": "dir" },
+      { "path": "/Desktop",     "type": "dir" },
+      { "path": "/Documents",   "type": "dir" },
+      { "path": "/Downloads",   "type": "dir" },
+      { "path": "/Pictures",    "type": "dir" },
+      { "path": "/System",      "type": "dir" }
+    ],
+    "defaultFiles": [
+      {
+        "path": "/Documents/歡迎.txt",
+        "content": "歡迎使用 πOS！\n\n這是一個在瀏覽器中運行的模擬作業系統。\n\n功能：\n- 虛擬檔案系統（IndexedDB 持久化）\n- 視窗管理器（拖曳、縮放、最大化）\n- 記事本、檔案總管、終端機\n- x86 虛擬機（可執行真實 Linux）\n\n祝使用愉快！"
+      }
+    ]
+  },
+  "settings": {
+    "theme": "dark",
+    "accentColor": "#0078D4",
+    "fontSize": 13,
+    "animations": true,
+    "blur": true
+  }
+}
