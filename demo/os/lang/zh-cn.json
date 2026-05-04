@@ -1,0 +1,49 @@
+{
+  "_meta": { "lang": "zh-cn", "name": "简体中文", "version": "1.0.0", "builtin": true },
+  "system": {
+    "name": "πOS",
+    "shutdown": "关机",
+    "restart": "重新启动",
+    "loading": "加载中...",
+    "booting": "正在启动...",
+    "welcome": "欢迎使用 πOS"
+  },
+  "boot": {
+    "step_kernel":  "初始化内核...",
+    "step_vfs":     "挂载虚拟文件系统...",
+    "step_desktop": "加载桌面环境...",
+    "step_apps":    "启动应用程序服务...",
+    "step_done":    "欢迎使用 πOS"
+  },
+  "desktop": {
+    "new_folder":    "新建文件夹",
+    "new_file":      "新建文本文件",
+    "refresh":       "刷新",
+    "display_settings": "显示设置",
+    "open":          "打开",
+    "pin_taskbar":   "固定到任务栏",
+    "folder_name_prompt": "文件夹名称：",
+    "file_name_prompt":   "文件名（含扩展名）："
+  },
+  "taskbar": {
+    "search_placeholder": "搜索应用...",
+    "user": "用户"
+  },
+  "wm": {
+    "minimize":  "最小化",
+    "maximize":  "最大化",
+    "restore":   "还原",
+    "close":     "关闭"
+  },
+  "ctx": {
+    "open":    "打开",
+    "rename":  "重命名",
+    "delete":  "删除",
+    "info":    "属性",
+    "refresh": "刷新",
+    "new_folder": "新建文件夹",
+    "new_file":   "新建文本文件",
+    "display_settings": "显示设置",
+    "pin_taskbar": "固定到任务栏"
+  }
+}

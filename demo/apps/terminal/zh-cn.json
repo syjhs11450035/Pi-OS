@@ -1,0 +1,8 @@
+{
+  "_meta": { "lang": "zh-cn", "app": "terminal", "version": "1.0.0" },
+  "title": "终端",
+  "welcome": "πOS 终端 v1.0",
+  "help_hint": "输入 help 查看可用命令",
+  "empty_dir": "（空目录）",
+  "cmd_not_found": "{cmd}: 找不到命令。输入 help 查看可用命令。"
+}

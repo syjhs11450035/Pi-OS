@@ -1,0 +1,8 @@
+{
+  "_meta": { "lang": "zh-tw", "app": "terminal", "version": "1.0.0" },
+  "title": "終端機",
+  "welcome": "πOS 終端機 v1.0",
+  "help_hint": "輸入 help 查看可用指令",
+  "empty_dir": "（空目錄）",
+  "cmd_not_found": "{cmd}: 找不到指令。輸入 help 查看可用指令。"
+}

@@ -1,0 +1,11 @@
+{
+  "id":         "browser",
+  "version":    "1.0.0",
+  "minOsVer":   "1.0.0",
+  "entry":      "app.js",
+  "icon":       "icon.svg",
+  "permissions": ["network"],
+  "background": false,
+  "autostart":  false,
+  "category":   "internet"
+}

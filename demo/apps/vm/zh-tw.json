@@ -1,0 +1,9 @@
+{
+  "_meta": { "lang": "zh-tw", "app": "vm", "version": "1.0.0" },
+  "title": "虛擬機",
+  "toolbar": { "start": "啟動", "stop": "停止", "reset": "重置", "fullscreen": "全螢幕", "load_iso": "載入 ISO" },
+  "status": { "idle": "未啟動", "loading_engine": "下載 v86 引擎...", "init": "初始化虛擬機...", "running": "執行中 — {label}", "stopped": "已停止", "error": "錯誤：{msg}", "resetting": "重置中..." },
+  "placeholder": { "title": "x86 虛擬機", "desc": "使用 WebAssembly v86 在瀏覽器中執行真實 x86 程式碼。\n選擇作業系統後點擊「啟動」。", "warning": "首次啟動需下載映像檔（約 5-30MB）", "tech": "支援技術：WebAssembly · SharedArrayBuffer · Canvas VGA\n可執行：DOS .exe · Linux ELF · ARM (規劃中)" },
+  "error": { "title": "無法啟動虛擬機", "reasons": "可能原因：\n- 需要 HTTPS 環境（SharedArrayBuffer 限制）\n- 需要設定 COOP/COEP HTTP 標頭\n- 網路無法連線到 copy.sh\n\n本地開發請使用：\nnpx serve -H '{\"Cross-Origin-Opener-Policy\":\"same-origin\",\"Cross-Origin-Embedder-Policy\":\"require-corp\"}'", "engine_fail": "無法載入 v86 引擎" },
+  "iso": { "prompt": "輸入 ISO/IMG 映像檔 URL：", "custom_label": "自訂：{name}" }
+}

@@ -1,0 +1,10 @@
+{
+  "_meta": { "lang": "en", "app": "settings", "version": "1.0.0" },
+  "title": "Settings",
+  "nav": { "display": "Display", "wallpaper": "Wallpaper", "system": "System", "storage": "Storage", "about": "About" },
+  "display": { "title": "Display Settings", "scale": "UI Scale", "taskbar_pos": "Taskbar Position", "taskbar_bottom": "Bottom", "taskbar_top": "Top (planned)", "animations": "Animations", "transparency": "Transparency" },
+  "wallpaper": { "title": "Wallpaper", "custom_url": "Custom Image URL", "apply": "Apply", "names": { "midnight": "Midnight", "aurora": "Aurora", "sunset": "Sunset", "forest": "Forest", "flame": "Flame", "black": "Black", "dark": "Dark Gray" } },
+  "system": { "title": "System Settings", "language": "Language", "timezone": "Timezone", "boot_sound": "Boot Sound", "auto_save": "Auto Save", "restart": "Restart", "shutdown": "Shut Down" },
+  "storage": { "title": "Storage", "vfs_size": "VFS Size", "browser_used": "Browser Used", "browser_quota": "Browser Quota", "backend": "Backend", "clear": "Clear All Data", "calculating": "Calculating...", "clear_confirm": "Clear all πOS data? This cannot be undone!", "clear_done": "Cleared. Page will reload." },
+  "about": { "title": "About πOS", "version": "Version", "kernel": "Kernel Version", "vfs": "VFS Version", "wm": "Window Manager", "browser_engine": "Browser Engine", "wasm": "WebAssembly", "sab": "SharedArrayBuffer", "idb": "IndexedDB", "supported": "Supported", "not_supported": "Not Supported", "sab_limited": "Not Supported (VM limited)", "footer": "Web-based OS simulation\nPowered by WebAssembly · IndexedDB · Canvas" }
+}

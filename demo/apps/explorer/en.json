@@ -1,0 +1,41 @@
+{
+  "_meta": { "lang": "en", "app": "explorer", "version": "1.0.0" },
+  "title": "File Explorer",
+  "sidebar": {
+    "desktop":   "Desktop",
+    "documents": "Documents",
+    "downloads": "Downloads",
+    "root":      "Root"
+  },
+  "toolbar": {
+    "up":         "Up",
+    "back":       "Back",
+    "refresh":    "Refresh",
+    "new_folder": "New Folder",
+    "new_file":   "New File"
+  },
+  "files": {
+    "loading":    "Loading...",
+    "empty":      "(Empty folder)",
+    "error":      "Error: "
+  },
+  "ctx": {
+    "open":   "Open",
+    "rename": "Rename",
+    "delete": "Delete",
+    "info":   "Properties"
+  },
+  "dialog": {
+    "rename_prompt":  "New name:",
+    "delete_confirm": "Delete \"{name}\"?",
+    "new_folder_prompt": "Folder name:",
+    "new_file_prompt":   "File name:",
+    "new_file_default":  "new_file.txt",
+    "open_unsupported":  "Cannot open: {name}\n(Unsupported file type)",
+    "rename_fail":       "Rename failed: {msg}",
+    "delete_fail":       "Delete failed: {msg}",
+    "info_text":         "Name: {name}\nPath: {path}\nType: {type}\nSize: {size}\nModified: {modified}",
+    "type_dir":          "Folder",
+    "type_file":         "File"
+  }
+}

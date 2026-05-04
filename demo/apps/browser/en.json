@@ -1,0 +1,6 @@
+{
+  "_meta": { "lang": "en", "app": "browser", "version": "1.0.0" },
+  "title": "Browser",
+  "status": { "ready": "Ready", "loading": "Loading...", "loaded": "Loaded", "loaded_cross": "Loaded (cross-origin)", "reload": "Reloading..." },
+  "bookmark": { "name_prompt": "Bookmark name:", "cors_note": "Some sites cannot load in iframe due to CORS/CSP restrictions" }
+}

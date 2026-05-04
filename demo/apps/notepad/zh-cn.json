@@ -1,0 +1,43 @@
+{
+  "_meta": { "lang": "zh-cn", "app": "notepad", "version": "1.0.0" },
+  "title": "记事本",
+  "menu": {
+    "file": "文件", "edit": "编辑", "view": "查看"
+  },
+  "file": {
+    "new":      "新建 (Ctrl+N)",
+    "open":     "打开 (Ctrl+O)",
+    "save":     "保存 (Ctrl+S)",
+    "save_as":  "另存为",
+    "close":    "关闭"
+  },
+  "edit": {
+    "undo":       "撤销 (Ctrl+Z)",
+    "cut":        "剪切",
+    "copy":       "复制",
+    "paste":      "粘贴",
+    "select_all": "全选"
+  },
+  "view": {
+    "font_larger":  "字体大小 +",
+    "font_smaller": "字体大小 -",
+    "dark_mode":    "深色模式",
+    "light_mode":   "浅色模式"
+  },
+  "status": {
+    "ready":    "就绪 | UTF-8",
+    "modified": "[已修改]",
+    "line_col": "行 {line}，字符 {chars} | UTF-8"
+  },
+  "dialog": {
+    "save_path":      "保存路径：",
+    "save_default":   "/Documents/未命名.txt",
+    "open_path":      "打开路径：",
+    "open_default":   "/Documents/",
+    "unsaved_confirm":"有未保存的更改，确定继续？",
+    "save_fail":      "保存失败：{msg}",
+    "open_fail":      "无法打开文件：{msg}",
+    "untitled":       "未命名 — 记事本"
+  },
+  "placeholder": "在此输入文字..."
+}
