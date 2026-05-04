@@ -17,6 +17,7 @@ PiOS.app.register('settings', {
       display: '顯示',
       wallpaper: '桌布',
       system: '系統',
+      api: 'API',
       storage: '儲存',
       apps: '應用程式',
       about: '關於'
@@ -51,18 +52,8 @@ PiOS.app.register('settings', {
           PiOS.ui.applySettings();
         }
       },
-      system: {
-        setLang: async value => {
-          await i18n.loadSysLang(value);
-          await Promise.all(Object.keys(PiOS.app.list()).map(id => i18n.loadAppLang(id, value)));
-          render();
-        },
-        setTimezone: value => Clock.setTimezone(value),
-        setBootSound: value => localStorage.setItem('pios_boot_sound', value ? '1' : '0'),
-        setAutoSave: value => localStorage.setItem('pios_auto_save', value ? '1' : '0'),
-        install: () => PiOS.pwa.install(),
-        restart: () => PiOS.system.restart(),
-        shutdown: () => PiOS.system.shutdown()
+      api: {
+        setApiKey: value => localStorage.setItem('calc_api_key', value)
       }
     };
 
@@ -79,6 +70,7 @@ PiOS.app.register('settings', {
       renderNav();
       if (current === 'display') return renderSchema(displaySchema(), actions.display);
       if (current === 'system') return renderSchema(systemSchema(), actions.system);
+      if (current === 'api') return renderApi();
       if (current === 'wallpaper') return renderWallpaper();
       if (current === 'storage') return renderStorage();
       if (current === 'apps') return renderApps();
@@ -149,6 +141,11 @@ PiOS.app.register('settings', {
         <div class="settings-row"><label>${info.id}</label><span>${info.version} · ${info.uiMode || 'html'} · ${info.installable ? '可安裝' : '不可安裝'}</span></div>
       `).join('')}</div>`;
     }
+    function renderApi() {
+      content.innerHTML = `<div class="api-panel"><h2>API 設定</h2>
+        <div class="settings-row"><label>計算機 AI API Key</label><input type="password" id="api-key-${winId}" value="${localStorage.getItem('calc_api_key') || ''}" style="flex:1"><button class="api-button" onclick="_st_${winId}.setApiKey(document.getElementById('api-key-${winId}').value)">儲存</button></div>
+      </div>`;
+    }
     function renderAbout() {
       const info = PiOS.system.info();
       content.innerHTML = `<div class="api-panel"><h2>關於 πOS</h2>${Object.entries(info).map(([k, v]) => `<div class="settings-row"><label>${k}</label><span>${String(v)}</span></div>`).join('')}</div>`;
@@ -169,6 +166,10 @@ PiOS.app.register('settings', {
       wallpaperUrl() {
         const url = document.getElementById(`st-wallpaper-url-${winId}`).value.trim();
         if (url) this.wallpaper(`url(${url}) center/cover no-repeat`);
+      },
+      setApiKey(value) {
+        localStorage.setItem('calc_api_key', value);
+        alert('API Key 已儲存');
       },
       async clearStorage() {
         if (!confirm('確定要清除所有 πOS 資料？')) return;
