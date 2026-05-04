@@ -5,6 +5,7 @@ const WM = (() => {
   let zCounter = 200;
   const windows = {};
   let winIdCounter = 0;
+  const CASCADE_OFFSET = 24;
 
   function open(app, args = {}) {
     const id = 'win-' + (++winIdCounter);
@@ -16,8 +17,9 @@ const WM = (() => {
     const h = app.height || 480;
     const maxW = window.innerWidth;
     const maxH = window.innerHeight - 48;
-    const left = Math.max(0, Math.min(Math.random() * 200 + 80, maxW - w));
-    const top  = Math.max(0, Math.min(Math.random() * 100 + 40, maxH - h));
+    const cascade = (winIdCounter - 1) * CASCADE_OFFSET;
+    const left = Math.max(0, Math.min(80 + cascade, maxW - w));
+    const top  = Math.max(0, Math.min(40 + cascade, maxH - h));
 
     el.style.cssText = `width:${w}px;height:${h}px;left:${left}px;top:${top}px;z-index:${++zCounter}`;
 

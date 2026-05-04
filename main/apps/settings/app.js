@@ -13,6 +13,11 @@ OS.registerApp('settings', {
 
   render(body, args, winId) {
     const T = k => i18n.t('app:settings.' + k);
+    const getBool = (key, fallback = true) => {
+      const value = localStorage.getItem(key);
+      return value === null ? fallback : value === '1';
+    };
+    const setBool = (key, value) => localStorage.setItem(key, value ? '1' : '0');
 
     const sections = {
       display:  { get label() { return T('nav.display');   }, render: renderDisplay  },
@@ -50,33 +55,37 @@ OS.registerApp('settings', {
 
     function renderDisplay(el) {
       const T = k => i18n.t('app:settings.display.' + k);
+      const scale = Number(localStorage.getItem('pios_ui_scale') || 100);
+      const taskbarPos = localStorage.getItem('pios_taskbar_pos') || 'bottom';
+      const animations = getBool('pios_animations', true);
+      const transparency = getBool('pios_transparency', true);
       el.innerHTML = `
         <div class="settings-section">
           <h2>${T('title')}</h2>
           <div class="settings-row">
             <label>${T('scale')}</label>
-            <input type="range" min="80" max="130" value="100" id="st-scale-${winId}"
+            <input type="range" min="80" max="130" value="${scale}" id="st-scale-${winId}"
               oninput="_st_${winId}.setScale(this.value)">
-            <span id="st-scale-val-${winId}">100%</span>
+            <span id="st-scale-val-${winId}">${scale}%</span>
           </div>
           <div class="settings-row">
             <label>${T('taskbar_pos')}</label>
             <select onchange="_st_${winId}.setTaskbarPos(this.value)">
-              <option value="bottom">${T('taskbar_bottom')}</option>
-              <option value="top">${T('taskbar_top')}</option>
+              <option value="bottom" ${taskbarPos === 'bottom' ? 'selected' : ''}>${T('taskbar_bottom')}</option>
+              <option value="top" ${taskbarPos === 'top' ? 'selected' : ''}>${T('taskbar_top')}</option>
             </select>
           </div>
           <div class="settings-row">
             <label>${T('animations')}</label>
             <label class="toggle">
-              <input type="checkbox" checked onchange="_st_${winId}.toggleAnim(this.checked)">
+              <input type="checkbox" ${animations ? 'checked' : ''} onchange="_st_${winId}.toggleAnim(this.checked)">
               <span class="toggle-slider"></span>
             </label>
           </div>
           <div class="settings-row">
             <label>${T('transparency')}</label>
             <label class="toggle">
-              <input type="checkbox" checked onchange="_st_${winId}.toggleBlur(this.checked)">
+              <input type="checkbox" ${transparency ? 'checked' : ''} onchange="_st_${winId}.toggleBlur(this.checked)">
               <span class="toggle-slider"></span>
             </label>
           </div>
@@ -122,6 +131,9 @@ OS.registerApp('settings', {
       const T = k => i18n.t('app:settings.system.' + k);
       const langs = i18n.getLangs();
       const langNames = { 'en': 'English', 'zh-tw': '繁體中文', 'zh-cn': '简体中文' };
+      const timezone = localStorage.getItem('pios_timezone') || Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const bootSound = getBool('pios_boot_sound', false);
+      const autoSave = getBool('pios_auto_save', true);
       el.innerHTML = `
         <div class="settings-section">
           <h2>${T('title')}</h2>
@@ -133,19 +145,19 @@ OS.registerApp('settings', {
           </div>
           <div class="settings-row">
             <label>${T('timezone')}</label>
-            <select>
-              <option>Asia/Taipei (UTC+8)</option>
-              <option>UTC</option>
-              <option>America/New_York</option>
+            <select onchange="_st_${winId}.setTimezone(this.value)">
+              ${['Asia/Taipei', 'UTC', 'America/New_York', 'Europe/London', 'Asia/Tokyo'].map(tz =>
+                `<option value="${tz}" ${tz === timezone ? 'selected' : ''}>${tz}</option>`
+              ).join('')}
             </select>
           </div>
           <div class="settings-row">
             <label>${T('boot_sound')}</label>
-            <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+            <label class="toggle"><input type="checkbox" ${bootSound ? 'checked' : ''} onchange="_st_${winId}.setBootSound(this.checked)"><span class="toggle-slider"></span></label>
           </div>
           <div class="settings-row">
             <label>${T('auto_save')}</label>
-            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            <label class="toggle"><input type="checkbox" ${autoSave ? 'checked' : ''} onchange="_st_${winId}.setAutoSave(this.checked)"><span class="toggle-slider"></span></label>
           </div>
           <div style="margin-top:20px;display:flex;gap:8px;">
             <button onclick="OS.restart()"  style="padding:8px 16px;border:none;border-radius:4px;background:rgba(0,120,212,.6);color:#fff;cursor:pointer;font-size:13px;">${T('restart')}</button>
@@ -174,12 +186,15 @@ OS.registerApp('settings', {
           quota = formatBytes(est.quota || 0);
           usage = formatBytes(est.usage || 0);
         }
+        const memory = getMemoryInfo();
         el.innerHTML = `
           <div class="settings-section">
             <h2>${T('title')}</h2>
             <div class="settings-row"><label>${T('vfs_size')}</label><span>${formatBytes(totalSize)}</span></div>
             <div class="settings-row"><label>${T('browser_used')}</label><span>${usage}</span></div>
             <div class="settings-row"><label>${T('browser_quota')}</label><span>${quota}</span></div>
+            <div class="settings-row"><label>${T('device_memory')}</label><span>${memory.device}</span></div>
+            <div class="settings-row"><label>${T('js_heap')}</label><span>${memory.heap}</span></div>
             <div class="settings-row"><label>${T('backend')}</label><span>IndexedDB</span></div>
             <div style="margin-top:16px;">
               <button onclick="_st_${winId}.clearStorage()"
@@ -200,7 +215,7 @@ OS.registerApp('settings', {
         <div class="settings-section">
           <h2>${T('title')}</h2>
           <div style="text-align:center;padding:20px 0;">
-            <img src="/api/logo.svg" width="64" height="64" alt="πOS" style="border-radius:14px;">
+            <img src="../api/logo.svg" width="64" height="64" alt="πOS" style="border-radius:14px;">
             <div style="font-size:24px;font-weight:300;letter-spacing:4px;margin:12px 0">πOS</div>
             <div style="color:#888;font-size:13px">${T('version')} 1.0.0</div>
           </div>
@@ -222,18 +237,34 @@ OS.registerApp('settings', {
       return (bytes/1024/1024).toFixed(2) + ' MB';
     }
 
+    function getMemoryInfo() {
+      const device = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : i18n.t('system.loading');
+      const perfMemory = performance.memory;
+      if (!perfMemory) return { device, heap: i18n.t('app:settings.storage.unavailable') };
+      return {
+        device,
+        heap: `${formatBytes(perfMemory.usedJSHeapSize)} / ${formatBytes(perfMemory.jsHeapSizeLimit)}`
+      };
+    }
+
     window[`_st_${winId}`] = {
       goto(section) { currentSection = section; renderNav(); renderContent(); },
       setScale(val) {
+        localStorage.setItem('pios_ui_scale', val);
         document.getElementById(`st-scale-val-${winId}`).textContent = val + '%';
-        document.getElementById('desktop').style.zoom = val / 100;
+        Desktop.applyUserSettings();
       },
-      setTaskbarPos() {},
-      toggleAnim(on) { document.documentElement.style.setProperty('--anim', on ? '1' : '0'); },
+      setTaskbarPos(pos) {
+        localStorage.setItem('pios_taskbar_pos', pos);
+        Desktop.applyUserSettings();
+      },
+      toggleAnim(on) {
+        setBool('pios_animations', on);
+        Desktop.applyUserSettings();
+      },
       toggleBlur(on) {
-        document.querySelectorAll('.os-window, #taskbar, #start-menu').forEach(el => {
-          el.style.backdropFilter = on ? 'blur(20px)' : 'none';
-        });
+        setBool('pios_transparency', on);
+        Desktop.applyUserSettings();
       },
       setWallpaper(bg) {
         document.getElementById('desktop').style.background = bg;
@@ -255,6 +286,9 @@ OS.registerApp('settings', {
         // 通知全系統
         OS.emit('i18n:loaded', { lang });
       },
+      setTimezone(timeZone) { Clock.setTimezone(timeZone); },
+      setBootSound(on) { setBool('pios_boot_sound', on); },
+      setAutoSave(on) { setBool('pios_auto_save', on); },
       async clearStorage() {
         const T = k => i18n.t('app:settings.storage.' + k);
         if (!confirm(T('clear_confirm'))) return;
@@ -265,8 +299,7 @@ OS.registerApp('settings', {
       }
     };
 
-    const savedWp = localStorage.getItem('webos_wallpaper');
-    if (savedWp) document.getElementById('desktop').style.background = savedWp;
+    Desktop.applyUserSettings();
 
     renderNav();
     renderContent();

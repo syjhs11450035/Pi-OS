@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>πOS — 網頁作業系統</title>
+  <link rel="icon" type="image/svg+xml" href="../api/logo.svg">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: #f7fbff;
+      background: #071019;
+      font-family: "Segoe UI", system-ui, sans-serif;
+    }
+    main {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      background:
+        linear-gradient(120deg, rgba(0,120,212,.28), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.06), transparent 36%),
+        #071019;
+    }
+    .hero {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 72px 0 36px;
+      display: grid;
+      gap: 28px;
+      align-content: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .brand img {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 7vw, 88px);
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+    p {
+      margin: 0;
+      max-width: 720px;
+      color: rgba(247, 251, 255, .78);
+      font-size: 18px;
+      line-height: 1.75;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    a {
+      min-height: 44px;
+      padding: 0 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: #fff;
+      text-decoration: none;
+      background: #0078d4;
+      border: 1px solid rgba(255,255,255,.16);
+    }
+    a.secondary {
+      background: rgba(255,255,255,.08);
+    }
+    .features {
+      border-top: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.2);
+    }
+    .features-inner {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 22px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      color: rgba(247, 251, 255, .7);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="brand">
+        <img src="../api/logo.svg" alt="πOS">
+        <h1>πOS</h1>
+      </div>
+      <p>一個跑在瀏覽器裡的作業系統實驗，包含桌面、視窗管理、虛擬檔案系統、內建應用程式與 x86 虛擬機。</p>
+      <div class="actions">
+        <a href="../demo/">開啟 Demo</a>
+        <a class="secondary" href="../main/">進入 main</a>
+      </div>
+    </section>
+    <section class="features">
+      <div class="features-inner">
+        <div>視窗管理與工作列</div>
+        <div>IndexedDB 虛擬檔案系統</div>
+        <div>動態 AppLoader</div>
+        <div>v86 虛擬機應用</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

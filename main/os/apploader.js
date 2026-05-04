@@ -2,8 +2,8 @@
  * πOS AppLoader — 應用程式載入器
  *
  * 職責：
- *  1. 讀取 /main/apps/{id}/info.json 取得 app 元資料
- *  2. 動態載入 /main/apps/{id}/app.js
+ *  1. 讀取 apps/{id}/info.json 取得 app 元資料
+ *  2. 動態載入 apps/{id}/app.js
  *  3. 沙盒控制：阻止未授權的背景執行、網路存取
  *  4. 載入 app 語言包
  *
@@ -27,7 +27,7 @@
  *   system       — 存取系統 API（關機/重啟）
  */
 const AppLoader = (() => {
-  const APPS_BASE   = '/main/apps/';
+  const APPS_BASE   = 'apps/';
   const OS_VERSION  = '1.0.0';
 
   // 已載入的 app 元資料快取
@@ -35,7 +35,7 @@ const AppLoader = (() => {
   // 已授權的 app
   const _granted  = new Set();
 
-  // 內建 app 清單（不需要動態載入，直接從 /main/apps/ 讀取）
+  // 內建 app 清單（不需要動態載入，直接從 apps/ 讀取）
   const BUILTIN_IDS = ['explorer', 'notepad', 'terminal', 'browser', 'vm', 'settings'];
 
   /**

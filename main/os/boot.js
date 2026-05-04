@@ -46,7 +46,7 @@ const Boot = (() => {
         try { await step.fn(); }
         catch (e) { console.error('[Boot] error at step', step.key, e); }
       }
-      await sleep(350);
+      if (!step.fn) await sleep(350);
     }
 
     bootScreen.classList.add('fade-out');
@@ -58,27 +58,77 @@ const Boot = (() => {
     Desktop.init();
     StartMenu.init();
     Clock.start();
+    playBootSound();
 
     OS.emit('boot:complete', {});
   }
 
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function playBootSound() {
+    if (localStorage.getItem('pios_boot_sound') !== '1') return;
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.28);
+      gain.connect(ctx.destination);
+
+      [523.25, 659.25].forEach((freq, index) => {
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        osc.start(ctx.currentTime + index * 0.08);
+        osc.stop(ctx.currentTime + 0.3);
+      });
+      setTimeout(() => ctx.close(), 500);
+    } catch {}
+  }
   return { start };
 })();
 
 // 時鐘
 const Clock = (() => {
-  function start() { update(); setInterval(update, 1000); }
+  let timer = null;
+  function start() {
+    update();
+    if (timer) clearInterval(timer);
+    timer = setInterval(update, 1000);
+  }
   function update() {
     const el = document.getElementById('tray-clock');
     if (!el) return;
     const now = new Date();
-    const h = String(now.getHours()).padStart(2, '0');
-    const m = String(now.getMinutes()).padStart(2, '0');
-    const d = `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()}`;
-    el.textContent = `${h}:${m}  ${d}`;
+    const timeZone = localStorage.getItem('pios_timezone') || Intl.DateTimeFormat().resolvedOptions().timeZone;
+    try {
+      const parts = new Intl.DateTimeFormat('zh-TW', {
+        timeZone,
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }).formatToParts(now).reduce((acc, part) => {
+        acc[part.type] = part.value;
+        return acc;
+      }, {});
+      el.textContent = `${parts.hour}:${parts.minute}  ${parts.year}/${parts.month}/${parts.day}`;
+    } catch {
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const d = `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()}`;
+      el.textContent = `${h}:${m}  ${d}`;
+    }
   }
-  return { start };
+  function setTimezone(timeZone) {
+    localStorage.setItem('pios_timezone', timeZone);
+    update();
+  }
+  return { start, setTimezone };
 })();
 
 // 開始選單

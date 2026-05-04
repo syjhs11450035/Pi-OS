@@ -14,6 +14,7 @@ OS.registerApp('notepad', {
   render(body, args, winId) {
     let currentPath = args.path || null;
     let modified = false;
+    let autoSaveTimer = null;
 
     body.innerHTML = `
       <div class="notepad-wrap">
@@ -37,7 +38,11 @@ OS.registerApp('notepad', {
       status.textContent = `行 ${lineNum}，字元 ${chars} | UTF-8${modified ? ' [已修改]' : ''}`;
     }
 
-    editor.addEventListener('input', () => { modified = true; updateStatus(); });
+    editor.addEventListener('input', () => {
+      modified = true;
+      updateStatus();
+      scheduleAutoSave();
+    });
     editor.addEventListener('keyup',  updateStatus);
     editor.addEventListener('click',  updateStatus);
 
@@ -72,6 +77,15 @@ OS.registerApp('notepad', {
         modified = false;
         updateStatus();
       } catch (e) { alert('儲存失敗：' + e.message); }
+    }
+
+    function scheduleAutoSave() {
+      if (localStorage.getItem('pios_auto_save') === '0' || !currentPath) return;
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        autoSaveTimer = null;
+        if (modified) save();
+      }, 800);
     }
 
     async function saveAs() {
@@ -128,6 +142,9 @@ OS.registerApp('notepad', {
           { label: '深色模式', action: () => editor.style.background = '#0c0c0c' },
           { label: '淺色模式', action: () => { editor.style.background = '#fff'; editor.style.color = '#111'; } },
         ]);
+      },
+      cleanup() {
+        if (autoSaveTimer) clearTimeout(autoSaveTimer);
       }
     };
 
@@ -135,5 +152,8 @@ OS.registerApp('notepad', {
     updateStatus();
   },
 
-  onClose(winId) { delete window[`_np_${winId}`]; }
+  onClose(winId) {
+    if (window[`_np_${winId}`] && window[`_np_${winId}`].cleanup) window[`_np_${winId}`].cleanup();
+    delete window[`_np_${winId}`];
+  }
 });

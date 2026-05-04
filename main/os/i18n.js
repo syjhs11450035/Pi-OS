@@ -2,7 +2,7 @@
  * πOS 多語言系統 (i18n)
  *
  * 優先順序：
- *   1. /main/os/lang/{lang}.json  (擴充語言包，使用者安裝)
+ *   1. os/lang/{lang}.json  (擴充語言包，使用者安裝)
  *   2. 內建 JSON (fetch 失敗時 fallback)
  *   3. en (最終 fallback)
  *
@@ -31,7 +31,7 @@ const i18n = (() => {
 
   /**
    * 載入系統語言包
-   * 先嘗試 /main/os/lang/{lang}.json（擴充包），
+   * 先嘗試 os/lang/{lang}.json（擴充包），
    * 失敗則用內建 BUILTIN[lang]
    */
   async function loadSysLang(lang) {
@@ -53,15 +53,15 @@ const i18n = (() => {
 
   async function _fetchLang(lang) {
     try {
-      const res = await fetch(`/main/os/lang/${lang}.json`);
+      const res = await fetch(`os/lang/${lang}.json`);
       if (!res.ok) return null;
       return await res.json();
     } catch { return null; }
   }
 
   // 載入 app 語言包
-  // 路徑：/main/apps/{appId}/{lang}.json
-  // fallback：/main/apps/{appId}/en.json
+  // 路徑：apps/{appId}/{lang}.json
+  // fallback：apps/{appId}/en.json
   async function loadAppLang(appId, lang) {
     const loaded = await _fetchAppLang(appId, lang)
                 || await _fetchAppLang(appId, 'en')
@@ -71,7 +71,7 @@ const i18n = (() => {
 
   async function _fetchAppLang(appId, lang) {
     try {
-      const res = await fetch(`/main/apps/${appId}/${lang}.json`);
+      const res = await fetch(`apps/${appId}/${lang}.json`);
       if (!res.ok) return null;
       return await res.json();
     } catch { return null; }

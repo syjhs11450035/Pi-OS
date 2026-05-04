@@ -4,6 +4,8 @@
 
 > 不維護demo而是main
 
+> ROADMAP.md 是唯一權威文件；原 `Files.md` 與 `代辦事項清單.md` 的內容已整合於此。
+
 用戶的命令/建議:
 ```text
 希望在跟目錄(這裡定義為工作區，md給你存一竊你知道的資料和你的發想...)建立一個server.py(main.py)用來架設網頁伺服器，最好先php化可以放到託管以及公網可連線...
@@ -13,6 +15,29 @@
 如果可以加入gui可以看後台情況...
 
 (用戶管理(可不可以看報所有檔案(ftp也架設工作區好維護))(這意味需要架設fpt，握建議把vscode也加進去，整個架構用建構好的vm來跑用外往連進去))
+```
+
+---
+
+## 專案規則與部署約定
+
+- 主要維護目標是 `/main/`；`/demo/` 只作為預覽快照，不主動修改。
+- 根目錄是 GitHub Pages / 靜態託管入口。
+- `/index.html` 必須能導向正確目的地：本機開發進 `./demo/`，GitHub Pages 進 `./介紹/`。
+- `/main/` 等同 `/main/index.html`，需支援無副檔名路由或靜態伺服器目錄索引。
+- `/api/logo.svg` 保留作為 OS 圖示來源，可用於網頁 favicon、開機畫面、開始按鈕、關機畫面與關於頁。
+- `/api/user/` 放登入、註冊等使用者 API 模擬資料。
+- `/api/file/` 放預設桌面、桌布、使用者、安裝環境等共用預設資料。
+- 所有前端資源路徑需盡量使用相對路徑，避免 GitHub Pages 子路徑部署失效。
+
+### 虛擬檔案系統目錄規劃
+
+```text
+/System/    系統資料，例如桌面配置、桌布、系統設定
+/Temp/      app 暫存區，例如 /Temp/vm/{windowId}/
+/Apps/      使用者安裝的 app，例如 /Apps/app-name/
+/Users/     使用者資料根目錄
+  /User/    預設使用者，作為未來多使用者系統基底
 ```
 
 ---
@@ -66,7 +91,7 @@
 | Blob URL + iframe sandbox | 安全執行 HTML/JS 應用程式 | 完成 |
 | File System Access API | 存取真實本機檔案（需使用者授權） | 規劃中 |
 | Clipboard API | 跨視窗剪貼簿 | 規劃中 |
-| Web Audio API | 系統音效 | 規劃中 |
+| Web Audio API | 系統音效 | 部分完成 |
 
 ---
 
@@ -93,7 +118,7 @@
 - [x] 檔案總管（目錄瀏覽、新增/刪除/重新命名、右鍵選單、側邊欄）
 - [x] 終端機（20+ 指令、Tab 補全、歷史記錄、Ctrl+C/L）
 - [x] 內建瀏覽器（iframe 沙盒、書籤管理、SVG 工具列）
-- [x] 系統設定（顯示/桌布/系統/儲存/關於，語言切換真正可用）
+- [x] 系統設定（顯示/桌布/系統/儲存/關於，縮放、工作列位置、語言、時區、桌布、透明度、動畫、儲存與記憶體資訊可用）
 - [x] 虛擬機（v86 整合，FreeDOS / Linux / KolibriOS）
 - [x] 所有 app 完整三語言包（en / zh-tw / zh-cn）
 - [x] 所有 app icon.svg（彩色 Fluent 風格）
@@ -117,7 +142,7 @@
 - [ ] 本機檔案存取 — File System Access API
 - [ ] PWA 支援 — 可安裝為桌面應用程式
 - [ ] 多視窗虛擬桌面 — 類 Windows 虛擬桌面
-- [ ] Web Audio API — 系統音效
+- [x] Web Audio API — 開機音效開關
 - [ ] Clipboard API — 跨視窗剪貼簿
 
 ---
@@ -127,9 +152,22 @@
 | 里程碑 | 目標 | 狀態 |
 |--------|------|------|
 | M1 | 完整可用的桌面環境（視窗/檔案/終端/多語言/沙盒） | 完成 |
-| M2 | 執行 FreeDOS .exe 程式 | 完成 |
-| M3 | 執行 Linux ARM 二進位 | 規劃中 |
-| M4 | 完整多使用者 + PWA + Service Worker | 規劃中 |
+
+---
+
+## 近期修復清單
+
+- [x] `main/os/apploader.js`：`APPS_BASE` 改為相對路徑，避免 GitHub Pages 子路徑部署失效。
+- [x] `main/os/i18n.js`：系統語言包與 app 語言包改為相對路徑。
+- [x] `main/index.html`：favicon、開機 logo、開始按鈕 logo 改為相對路徑。
+- [x] `main/os/kernel.js`：關機畫面 logo 改為相對路徑。
+- [x] `main/os/wm.js`：視窗初始位置改為 24px cascade，避免小螢幕視窗超出邊界。
+- [x] `main/os/fs.js`：`rename()` 重新命名資料夾時同步更新子節點路徑。
+- [x] `main/os/boot.js`：有初始化函式的開機步驟完成後立即進下一步，減少硬等待。
+- [x] `main/apps/settings/`：設定頁控制項接上實際行為與持久化。
+- [x] `main/apps/notepad/app.js`：自動儲存設定接到已開啟檔案的編輯流程。
+- [x] `/index.html`：加入 GitHub Pages 偵測導向。
+- [x] `/介紹/index.html`：建立介紹頁。
 
 ---
 
@@ -175,4 +213,4 @@ info.json 格式：
 
 ---
 
-*最後更新：2026-05-03*
+*最後更新：2026-05-04*

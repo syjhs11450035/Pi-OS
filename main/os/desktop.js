@@ -44,12 +44,34 @@ const Desktop = (() => {
   }
 
   function init() {
+    applyUserSettings();
     renderIcons();
     bindContextMenu();
     // 監聽 /Desktop 資料夾變更
     OS.on('fs:change', ({ path }) => {
       if (path && path.startsWith('/Desktop')) renderIcons();
     });
+  }
+
+  function applyUserSettings() {
+    const desktop = document.getElementById('desktop');
+    if (!desktop) return;
+
+    const wallpaper = localStorage.getItem('webos_wallpaper');
+    if (wallpaper) desktop.style.background = wallpaper;
+
+    const scale = Number(localStorage.getItem('pios_ui_scale') || 100);
+    desktop.style.setProperty('--ui-scale', Math.min(130, Math.max(80, scale)) / 100);
+    desktop.classList.toggle('ui-scaled', scale !== 100);
+
+    const taskbarPos = localStorage.getItem('pios_taskbar_pos') || 'bottom';
+    desktop.classList.toggle('taskbar-top', taskbarPos === 'top');
+
+    const animations = localStorage.getItem('pios_animations') !== '0';
+    desktop.classList.toggle('reduce-motion', !animations);
+
+    const transparency = localStorage.getItem('pios_transparency') !== '0';
+    desktop.classList.toggle('no-transparency', !transparency);
   }
 
   async function renderIcons() {
@@ -323,5 +345,5 @@ const Desktop = (() => {
     return `<span class="svg-icon">${icons[key] || icons.notepad}</span>`;
   }
 
-  return { init, showContextMenu, hideContextMenu, getIcon, renderIcons };
+  return { init, showContextMenu, hideContextMenu, getIcon, renderIcons, applyUserSettings };
 })();

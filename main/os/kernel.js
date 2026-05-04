@@ -58,7 +58,7 @@ const OS = (() => {
     document.body.innerHTML = `
       <div style="background:#000;color:#fff;height:100vh;display:flex;align-items:center;
         justify-content:center;font-size:20px;font-family:sans-serif;flex-direction:column;gap:12px;">
-        <img src="/api/logo.svg" width="48" height="48" style="border-radius:10px;opacity:.5">
+        <img src="../api/logo.svg" width="48" height="48" style="border-radius:10px;opacity:.5">
         <span>已關機。請重新整理頁面以重新啟動。</span>
       </div>`;
   }

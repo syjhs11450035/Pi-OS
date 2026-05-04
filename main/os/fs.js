@@ -126,8 +126,23 @@ const VFS = (() => {
     const name = parts.pop();
     const parent = parts.join('/') || '/';
     await put({ ...item, path: newPath, name, parent });
+    if (item.type === 'dir') {
+      await renameChildren(oldPath, newPath);
+    }
     await del(oldPath);
     OS.emit('fs:change', { path: newPath, type: 'rename' });
+  }
+
+  async function renameChildren(oldParent, newParent) {
+    const children = await listDir(oldParent);
+    for (const child of children) {
+      const childNewPath = newParent + child.path.slice(oldParent.length);
+      await put({ ...child, path: childNewPath, parent: newParent });
+      if (child.type === 'dir') {
+        await renameChildren(child.path, childNewPath);
+      }
+      await del(child.path);
+    }
   }
 
   async function exists(path) {
