@@ -20,6 +20,13 @@ PiOS.app.register('settings', {
       api: 'API',
       storage: '儲存',
       apps: '應用程式',
+      sound: '音效',
+      shortcuts: '快捷鍵',
+      associations: '檔案關聯',
+      network: '網路',
+      security: '安全性',
+      notifications: '通知',
+      appearance: '外觀',
       about: '關於'
     };
     let current = args.section || 'display';
@@ -52,8 +59,67 @@ PiOS.app.register('settings', {
           PiOS.ui.applySettings();
         }
       },
+      system: {
+        setLang: value => {
+          localStorage.setItem('pios_lang', value);
+          i18n.setLang(value);
+          location.reload();
+        },
+        setTimezone: value => localStorage.setItem('pios_timezone', value),
+        setBootSound: value => localStorage.setItem('pios_boot_sound', value ? '1' : '0'),
+        setAutoSave: value => localStorage.setItem('pios_auto_save', value ? '1' : '0'),
+        install: () => PiOS.pwa.install(),
+        restart: () => location.reload(),
+        shutdown: () => window.close()
+      },
       api: {
         setApiKey: value => localStorage.setItem('calc_api_key', value)
+      },
+      sound: {
+        setMasterVolume: value => localStorage.setItem('pios_master_volume', value),
+        setSoundEnabled: value => localStorage.setItem('pios_sound_enabled', value ? '1' : '0'),
+        setNotificationSound: value => localStorage.setItem('pios_notification_sound', value ? '1' : '0'),
+        setAppSound: value => localStorage.setItem('pios_app_sound', value ? '1' : '0')
+      },
+      shortcuts: {
+        setShortcut: (action, keys) => {
+          const shortcuts = JSON.parse(localStorage.getItem('pios_shortcuts') || '{}');
+          shortcuts[action] = keys;
+          localStorage.setItem('pios_shortcuts', JSON.stringify(shortcuts));
+        }
+      },
+      associations: {
+        setAssociation: (ext, app) => {
+          const associations = JSON.parse(localStorage.getItem('pios_associations') || '{}');
+          associations[ext] = app;
+          localStorage.setItem('pios_associations', JSON.stringify(associations));
+        }
+      },
+      network: {
+        setProxy: value => localStorage.setItem('pios_proxy', value),
+        setTimeout: value => localStorage.setItem('pios_network_timeout', value)
+      },
+      security: {
+        setPassword: value => localStorage.setItem('pios_password', btoa(value)),
+        enableEncryption: value => localStorage.setItem('pios_encryption', value ? '1' : '0')
+      },
+      notifications: {
+        setEnabled: value => localStorage.setItem('pios_notifications', value ? '1' : '0'),
+        setDuration: value => localStorage.setItem('pios_notification_duration', value)
+      },
+      appearance: {
+        setTheme: value => {
+          localStorage.setItem('pios_theme', value);
+          PiOS.ui.applySettings();
+        },
+        setFontSize: value => {
+          localStorage.setItem('pios_font_size', value);
+          PiOS.ui.applySettings();
+        },
+        setFontFamily: value => {
+          localStorage.setItem('pios_font_family', value);
+          PiOS.ui.applySettings();
+        }
       }
     };
 
@@ -74,6 +140,13 @@ PiOS.app.register('settings', {
       if (current === 'wallpaper') return renderWallpaper();
       if (current === 'storage') return renderStorage();
       if (current === 'apps') return renderApps();
+      if (current === 'sound') return renderSchema(soundSchema(), actions.sound);
+      if (current === 'shortcuts') return renderShortcuts();
+      if (current === 'associations') return renderAssociations();
+      if (current === 'network') return renderSchema(networkSchema(), actions.network);
+      if (current === 'security') return renderSchema(securitySchema(), actions.security);
+      if (current === 'notifications') return renderSchema(notificationsSchema(), actions.notifications);
+      if (current === 'appearance') return renderSchema(appearanceSchema(), actions.appearance);
       return renderAbout();
     }
     function renderSchema(schema, schemaActions) {
@@ -91,19 +164,60 @@ PiOS.app.register('settings', {
         ]
       };
     }
-    function systemSchema() {
-      const tz = localStorage.getItem('pios_timezone') || Intl.DateTimeFormat().resolvedOptions().timeZone;
+    function soundSchema() {
       return {
         type: 'panel',
-        title: '系統設定',
+        title: '音效設定',
         children: [
-          { type: 'row', label: '語言', children: [{ type: 'select', value: i18n.getLang(), onChange: 'setLang', options: [{ label: 'English', value: 'en' }, { label: '繁體中文', value: 'zh-tw' }, { label: '简体中文', value: 'zh-cn' }] }] },
-          { type: 'row', label: '時區', children: [{ type: 'select', value: tz, onChange: 'setTimezone', options: ['Asia/Taipei','UTC','America/New_York','Europe/London','Asia/Tokyo'].map(value => ({ label: value, value })) }] },
-          { type: 'row', label: '開機音效', children: [{ type: 'toggle', value: boolRaw('pios_boot_sound', false), onChange: 'setBootSound' }] },
-          { type: 'row', label: '記事本自動儲存', children: [{ type: 'toggle', value: boolRaw('pios_auto_save', true), onChange: 'setAutoSave' }] },
-          { type: 'row', label: '加入主畫面', children: [{ type: 'button', label: '安裝 πOS', onClick: 'install' }] },
-          { type: 'row', label: '電源', children: [{ type: 'button', label: '重新啟動', onClick: 'restart' }, { type: 'button', label: '關機', onClick: 'shutdown' }] },
-          { type: 'row', label: 'PWA 狀態', children: [{ type: 'text', text: JSON.stringify(PiOS.pwa.status()) }] }
+          { type: 'row', label: '主音量', children: [{ type: 'slider', min: 0, max: 100, suffix: '%', value: Number(localStorage.getItem('pios_master_volume') || 50), onChange: 'setMasterVolume' }] },
+          { type: 'row', label: '啟用音效', children: [{ type: 'toggle', value: boolRaw('pios_sound_enabled', true), onChange: 'setSoundEnabled' }] },
+          { type: 'row', label: '通知音效', children: [{ type: 'toggle', value: boolRaw('pios_notification_sound', true), onChange: 'setNotificationSound' }] },
+          { type: 'row', label: '應用音效', children: [{ type: 'toggle', value: boolRaw('pios_app_sound', false), onChange: 'setAppSound' }] }
+        ]
+      };
+    }
+
+    function networkSchema() {
+      return {
+        type: 'panel',
+        title: '網路設定',
+        children: [
+          { type: 'row', label: '代理伺服器', children: [{ type: 'input', value: localStorage.getItem('pios_proxy') || '', placeholder: 'http://proxy.example.com:8080', onChange: 'setProxy' }] },
+          { type: 'row', label: '網路逾時', children: [{ type: 'slider', min: 5, max: 60, suffix: '秒', value: Number(localStorage.getItem('pios_network_timeout') || 30), onChange: 'setTimeout' }] }
+        ]
+      };
+    }
+
+    function securitySchema() {
+      return {
+        type: 'panel',
+        title: '安全性設定',
+        children: [
+          { type: 'row', label: '系統密碼', children: [{ type: 'password', value: '', placeholder: '設定系統密碼', onChange: 'setPassword' }] },
+          { type: 'row', label: '資料加密', children: [{ type: 'toggle', value: boolRaw('pios_encryption', false), onChange: 'enableEncryption' }] }
+        ]
+      };
+    }
+
+    function notificationsSchema() {
+      return {
+        type: 'panel',
+        title: '通知設定',
+        children: [
+          { type: 'row', label: '啟用通知', children: [{ type: 'toggle', value: boolRaw('pios_notifications', true), onChange: 'setEnabled' }] },
+          { type: 'row', label: '顯示持續時間', children: [{ type: 'slider', min: 1, max: 10, suffix: '秒', value: Number(localStorage.getItem('pios_notification_duration') || 3), onChange: 'setDuration' }] }
+        ]
+      };
+    }
+
+    function appearanceSchema() {
+      return {
+        type: 'panel',
+        title: '外觀設定',
+        children: [
+          { type: 'row', label: '主題', children: [{ type: 'select', value: localStorage.getItem('pios_theme') || 'dark', onChange: 'setTheme', options: [{ label: '深色', value: 'dark' }, { label: '淺色', value: 'light' }, { label: '自動', value: 'auto' }] }] },
+          { type: 'row', label: '字體大小', children: [{ type: 'slider', min: 12, max: 24, suffix: 'px', value: Number(localStorage.getItem('pios_font_size') || 14), onChange: 'setFontSize' }] },
+          { type: 'row', label: '字體家族', children: [{ type: 'select', value: localStorage.getItem('pios_font_family') || 'system', onChange: 'setFontFamily', options: [{ label: '系統預設', value: 'system' }, { label: 'Sans Serif', value: 'sans-serif' }, { label: 'Serif', value: 'serif' }, { label: '等寬', value: 'monospace' }] }] }
         ]
       };
     }
@@ -135,10 +249,47 @@ PiOS.app.register('settings', {
         <button class="api-button" onclick="_st_${winId}.clearStorage()">清除 πOS 資料</button>
       </div>`;
     }
-    function renderApps() {
-      const infos = Object.keys(PiOS.app.list()).map(id => PiOS.app.info(id)).filter(Boolean);
-      content.innerHTML = `<div class="api-panel"><h2>應用程式</h2>${infos.map(info => `
-        <div class="settings-row"><label>${info.id}</label><span>${info.version} · ${info.uiMode || 'html'} · ${info.installable ? '可安裝' : '不可安裝'}</span></div>
+    function renderShortcuts() {
+      const shortcuts = JSON.parse(localStorage.getItem('pios_shortcuts') || '{}');
+      const defaultShortcuts = {
+        'explorer': 'Ctrl+E',
+        'notepad': 'Ctrl+N',
+        'terminal': 'Ctrl+T',
+        'settings': 'Ctrl+,',
+        'calculator': 'Ctrl+C',
+        'games': 'Ctrl+G'
+      };
+      const allShortcuts = { ...defaultShortcuts, ...shortcuts };
+
+      content.innerHTML = `<div class="api-panel"><h2>快捷鍵設定</h2>${Object.entries(allShortcuts).map(([action, keys]) => `
+        <div class="settings-row">
+          <label>${action}</label>
+          <input type="text" value="${keys}" onchange="_st_${winId}.setShortcut('${action}', this.value)" style="flex:1">
+        </div>
+      `).join('')}</div>`;
+    }
+
+    function renderAssociations() {
+      const associations = JSON.parse(localStorage.getItem('pios_associations') || '{}');
+      const defaultAssociations = {
+        '.txt': 'notepad',
+        '.js': 'notepad',
+        '.json': 'notepad',
+        '.md': 'notepad',
+        '.png': 'explorer',
+        '.jpg': 'explorer',
+        '.gif': 'explorer'
+      };
+      const allAssociations = { ...defaultAssociations, ...associations };
+      const apps = Object.keys(PiOS.app.list());
+
+      content.innerHTML = `<div class="api-panel"><h2>檔案關聯</h2>${Object.entries(allAssociations).map(([ext, app]) => `
+        <div class="settings-row">
+          <label>${ext}</label>
+          <select onchange="_st_${winId}.setAssociation('${ext}', this.value)" style="flex:1">
+            ${apps.map(a => `<option value="${a}" ${a === app ? 'selected' : ''}>${a}</option>`).join('')}
+          </select>
+        </div>
       `).join('')}</div>`;
     }
     function renderApi() {
@@ -176,6 +327,16 @@ PiOS.app.register('settings', {
         indexedDB.deleteDatabase('WebOS_FS');
         localStorage.clear();
         location.reload();
+      },
+      setShortcut(action, keys) {
+        const shortcuts = JSON.parse(localStorage.getItem('pios_shortcuts') || '{}');
+        shortcuts[action] = keys;
+        localStorage.setItem('pios_shortcuts', JSON.stringify(shortcuts));
+      },
+      setAssociation(ext, app) {
+        const associations = JSON.parse(localStorage.getItem('pios_associations') || '{}');
+        associations[ext] = app;
+        localStorage.setItem('pios_associations', JSON.stringify(associations));
       }
     };
     render();
