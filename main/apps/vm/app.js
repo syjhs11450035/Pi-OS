@@ -65,13 +65,42 @@ PiOS.app.register('vm', {
       `;
     }
     function loadV86Script() {
+      const urls = [
+        'https://copy.sh/v86/build/libv86.js',
+        'https://cdn.jsdelivr.net/npm/v86/build/libv86.js',
+        'https://unpkg.com/v86/build/libv86.js'
+      ];
       return new Promise((resolve, reject) => {
         if (window.V86Starter) return resolve();
-        const script = document.createElement('script');
-        script.src = 'https://copy.sh/v86/build/libv86.js';
-        script.onload = resolve;
-        script.onerror = () => reject(new Error('無法下載 v86 引擎'));
-        document.head.appendChild(script);
+
+        let index = 0;
+        function tryLoad() {
+          const script = document.createElement('script');
+          script.src = urls[index];
+          script.async = false;
+          script.onload = () => {
+            if (window.V86Starter) {
+              resolve();
+            } else {
+              index += 1;
+              if (index < urls.length) {
+                tryLoad();
+              } else {
+                reject(new Error('載入 v86 引擎完成，但 V86Starter 未定義'));
+              }
+            }
+          };
+          script.onerror = () => {
+            index += 1;
+            if (index < urls.length) {
+              tryLoad();
+            } else {
+              reject(new Error('無法下載 v86 引擎，請檢查網路或 CDN'));
+            }
+          };
+          document.head.appendChild(script);
+        }
+        tryLoad();
       });
     }
     async function resolveMedia(preset) {
