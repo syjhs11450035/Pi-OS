@@ -58,7 +58,9 @@ const Boot = (() => {
     Desktop.init();
     StartMenu.init();
     Clock.start();
+    PiOS.pwa.init();
     playBootSound();
+    launchFromUrl();
 
     OS.emit('boot:complete', {});
   }
@@ -86,6 +88,20 @@ const Boot = (() => {
       });
       setTimeout(() => ctx.close(), 500);
     } catch {}
+  }
+  function launchFromUrl() {
+    const params = new URLSearchParams(location.search);
+    const appId = params.get('app');
+    if (!appId) return;
+    const args = {};
+    const path = params.get('path');
+    const url = params.get('url');
+    if (path) args.path = path;
+    if (url) args.url = url;
+    setTimeout(() => {
+      if (OS.getApps()[appId]) OS.launch(appId, args);
+      else PiOS.ui.notify('無法開啟捷徑', `找不到應用程式：${appId}`);
+    }, 250);
   }
   return { start };
 })();

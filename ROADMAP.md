@@ -16,7 +16,7 @@
 
 如果可以加入gui可以看後台情況...
 
-(用戶管理(可不可以看報所有檔案(ftp也架設工作區好維護))(這意味需要架設fpt，握建議把vscode也加進去，整個架構用建構好的vm來跑用外往連進去))
+(用戶管理(可不可以看報所有檔案(ftp也架設工作區好維護))(這意味需要架設fpt，我建議把vscode也加進去，整個架構用建構好的vm來跑用外往連進去))
 ```
 
 ---
@@ -42,6 +42,8 @@
 /Apps/      使用者安裝的 app，例如 /Apps/app-name/
 /Users/     使用者資料根目錄
   /User/    預設使用者，作為未來多使用者系統基底
+
+無其他在root的資料夾
 ```
 
 ---
@@ -89,7 +91,7 @@
 | IndexedDB | 持久化虛擬檔案系統，支援二進位 (base64) | 完成 |
 | WebAssembly (v86) | 在瀏覽器中執行真實 x86 Linux / DOS 程式 | 完成 |
 | SharedArrayBuffer + Atomics | 多執行緒同步，模擬 CPU 核心 | 完成（需 HTTPS） |
-| Service Worker | 攔截網路請求，模擬 OS 層級 I/O | 規劃中 |
+| Service Worker | PWA 離線快取、未來攔截 /api/ 請求 | 部分完成 |
 | Web Workers | 背景執行程序，不阻塞 UI | 規劃中 |
 | Canvas API | VM 螢幕輸出渲染 | 完成 |
 | Blob URL + iframe sandbox | 安全執行 HTML/JS 應用程式 | 完成 |
@@ -142,13 +144,14 @@
 
 ### Phase 4 — 進階功能
 - [ ] 多使用者系統 — 登入畫面、使用者隔離
+- [x] Service Worker — PWA 離線快取基礎
 - [ ] Service Worker — 攔截 /api/ 請求，模擬後端
 - [ ] 網路模擬 — 虛擬 TCP/IP 堆疊
 - [ ] 應用程式商店 — 動態安裝第三方 app
 - [x] App JSON UI Schema 第一版 — 讓 app 可用 JSON 定義 UI
 - [ ] 開發者工具與 App Builder
 - [ ] 本機檔案存取 — File System Access API
-- [ ] PWA 支援 — 可安裝為桌面應用程式
+- [x] PWA 支援 — manifest、Service Worker、加入主畫面、standalone 啟動捷徑
 - [ ] 多視窗虛擬桌面 — 類 Windows 虛擬桌面
 - [x] Web Audio API — 開機音效開關
 - [ ] Clipboard API — 跨視窗剪貼簿

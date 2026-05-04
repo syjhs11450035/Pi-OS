@@ -134,6 +134,10 @@ OS.registerApp('settings', {
       const timezone = localStorage.getItem('pios_timezone') || Intl.DateTimeFormat().resolvedOptions().timeZone;
       const bootSound = getBool('pios_boot_sound', false);
       const autoSave = getBool('pios_auto_save', true);
+      const installState = PiOS.pwa.isStandalone()
+        ? T('installed')
+        : (PiOS.pwa.canInstall() ? T('install_ready') : T('install_browser_menu'));
+      const pwaStatus = PiOS.pwa.status();
       el.innerHTML = `
         <div class="settings-section">
           <h2>${T('title')}</h2>
@@ -159,6 +163,12 @@ OS.registerApp('settings', {
             <label>${T('auto_save')}</label>
             <label class="toggle"><input type="checkbox" ${autoSave ? 'checked' : ''} onchange="_st_${winId}.setAutoSave(this.checked)"><span class="toggle-slider"></span></label>
           </div>
+          <div class="settings-row">
+            <label>${T('install_app')}</label>
+            <button onclick="_st_${winId}.installPwa()" style="padding:7px 12px;border:none;border-radius:4px;background:rgba(0,120,212,.65);color:#fff;cursor:pointer;font-size:12px;">${T('install_button')}</button>
+          </div>
+          <div class="settings-row"><label>${T('pwa_state')}</label><span>${pwaStatus.serviceWorker ? 'Service Worker' : 'Browser'} · ${pwaStatus.online ? 'Online' : 'Offline'}</span></div>
+          <div style="font-size:12px;color:#888;padding-top:6px;">${installState}</div>
           <div style="margin-top:20px;display:flex;gap:8px;">
             <button onclick="OS.restart()"  style="padding:8px 16px;border:none;border-radius:4px;background:rgba(0,120,212,.6);color:#fff;cursor:pointer;font-size:13px;">${T('restart')}</button>
             <button onclick="OS.shutdown()" style="padding:8px 16px;border:none;border-radius:4px;background:rgba(200,0,0,.6);color:#fff;cursor:pointer;font-size:13px;">${T('shutdown')}</button>
@@ -289,6 +299,10 @@ OS.registerApp('settings', {
       setTimezone(timeZone) { Clock.setTimezone(timeZone); },
       setBootSound(on) { setBool('pios_boot_sound', on); },
       setAutoSave(on) { setBool('pios_auto_save', on); },
+      async installPwa() {
+        const result = await PiOS.pwa.install();
+        if (result.installed) PiOS.ui.notify(i18n.t('app:settings.system.install_app'), i18n.t('app:settings.system.installed'));
+      },
       async clearStorage() {
         const T = k => i18n.t('app:settings.storage.' + k);
         if (!confirm(T('clear_confirm'))) return;

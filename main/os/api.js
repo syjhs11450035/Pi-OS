@@ -4,6 +4,19 @@
  */
 const PiOS = (() => {
   const commands = {};
+  let deferredInstallPrompt = null;
+
+  window.addEventListener('beforeinstallprompt', event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    OS.emit('pwa:install_available', {});
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+    OS.emit('pwa:installed', {});
+    OS.notify('πOS 已安裝', '可以從主畫面或桌面啟動。');
+  });
 
   function normalizePath(path, cwd = '/') {
     if (!path || path === '~') return '/Users/User';
@@ -98,6 +111,46 @@ const PiOS = (() => {
         serviceWorker: 'serviceWorker' in navigator,
       };
     }
+  };
+
+  const pwa = {
+    async init() {
+      if (!('serviceWorker' in navigator)) return { supported: false, reason: 'service_worker_unavailable' };
+      try {
+      const registration = await navigator.serviceWorker.register('./sw.js');
+        await navigator.serviceWorker.ready;
+        OS.emit('pwa:ready', { registration });
+        return { supported: true, registration };
+      } catch (e) {
+        OS.emit('pwa:error', { error: e });
+        return { supported: false, reason: e.message };
+      }
+    },
+    canInstall() {
+      return !!deferredInstallPrompt;
+    },
+    isStandalone() {
+      return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    },
+    status() {
+      return {
+        serviceWorker: 'serviceWorker' in navigator,
+        controller: !!navigator.serviceWorker?.controller,
+        canInstall: !!deferredInstallPrompt,
+        standalone: this.isStandalone(),
+        online: navigator.onLine,
+      };
+    },
+    async install() {
+      if (!deferredInstallPrompt) {
+        OS.notify('加入主畫面', '如果瀏覽器沒有顯示安裝提示，請使用瀏覽器選單中的「加入主畫面」。');
+        return { installed: false, reason: 'prompt_unavailable' };
+      }
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      return { installed: choice.outcome === 'accepted', outcome: choice.outcome };
+    },
   };
 
   function registerCommand(name, handler, meta = {}) {
@@ -423,6 +476,7 @@ const PiOS = (() => {
     settings,
     ui,
     system,
+    pwa,
     command: { register: registerCommand, exec, parseArgs, list: () => ({ ...commands }) },
   };
 })();

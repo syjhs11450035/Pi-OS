@@ -1,0 +1,47 @@
+{
+  "id": "/main/",
+  "name": "πOS",
+  "short_name": "πOS",
+  "description": "A browser-based operating system with installable web apps.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "background_color": "#000000",
+  "theme_color": "#0078d4",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "../api/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "檔案總管",
+      "short_name": "檔案",
+      "url": "./?app=explorer",
+      "icons": [{ "src": "apps/explorer/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "記事本",
+      "short_name": "記事",
+      "url": "./?app=notepad",
+      "icons": [{ "src": "apps/notepad/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "終端機",
+      "short_name": "終端",
+      "url": "./?app=terminal",
+      "icons": [{ "src": "apps/terminal/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "設定",
+      "short_name": "設定",
+      "url": "./?app=settings",
+      "icons": [{ "src": "apps/settings/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    }
+  ]
+}

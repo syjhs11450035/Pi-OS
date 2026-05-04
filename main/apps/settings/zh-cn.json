@@ -4,7 +4,7 @@
   "nav": { "display": "显示", "wallpaper": "壁纸", "system": "系统", "storage": "存储空间", "about": "关于" },
   "display": { "title": "显示设置", "scale": "UI 缩放", "taskbar_pos": "任务栏位置", "taskbar_bottom": "底部", "taskbar_top": "顶部", "animations": "动画效果", "transparency": "透明效果" },
   "wallpaper": { "title": "壁纸设置", "custom_url": "自定义图片 URL", "apply": "应用", "names": { "midnight": "深夜蓝", "aurora": "极光", "sunset": "日落", "forest": "森林", "flame": "火焰", "black": "纯黑", "dark": "深灰" } },
-  "system": { "title": "系统设置", "language": "系统语言", "timezone": "时区", "boot_sound": "开机音效", "auto_save": "自动保存", "restart": "重新启动", "shutdown": "关机" },
+  "system": { "title": "系统设置", "language": "系统语言", "timezone": "时区", "boot_sound": "开机音效", "auto_save": "自动保存", "install_app": "添加到主屏幕", "install_button": "安装 πOS", "pwa_state": "PWA 状态", "install_ready": "浏览器已允许安装，可直接添加到主屏幕。", "install_browser_menu": "如果按钮没有弹出提示，请使用浏览器菜单里的“添加到主屏幕”。", "installed": "πOS 已在独立窗口/主屏幕模式运行。", "restart": "重新启动", "shutdown": "关机" },
   "storage": { "title": "存储空间", "vfs_size": "VFS 文件大小", "browser_used": "浏览器已用空间", "browser_quota": "浏览器配额", "device_memory": "设备内存", "js_heap": "JS 内存", "unavailable": "无法取得", "backend": "存储后端", "clear": "清除所有数据", "calculating": "计算中...", "clear_confirm": "确定要清除所有 πOS 数据？此操作无法撤销！", "clear_done": "已清除。页面将重新加载。" },
   "about": { "title": "关于 πOS", "version": "版本", "kernel": "内核版本", "vfs": "VFS 版本", "wm": "窗口管理器", "browser_engine": "浏览器引擎", "wasm": "WebAssembly", "sab": "SharedArrayBuffer", "idb": "IndexedDB", "supported": "支持", "not_supported": "不支持", "sab_limited": "不支持（VM 功能受限）", "footer": "在浏览器中运行的模拟操作系统\n使用 WebAssembly · IndexedDB · Canvas" }
 }
