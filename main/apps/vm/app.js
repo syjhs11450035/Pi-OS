@@ -71,7 +71,7 @@ PiOS.app.register('vm', {
         'https://unpkg.com/v86/build/libv86.js'
       ];
       return new Promise((resolve, reject) => {
-        if (window.V86Starter) return resolve();
+        if (window.V86Starter || window.V86) return resolve();
 
         let index = 0;
         function tryLoad() {
@@ -79,14 +79,14 @@ PiOS.app.register('vm', {
           script.src = urls[index];
           script.async = false;
           script.onload = () => {
-            if (window.V86Starter) {
+            if (window.V86Starter || window.V86) {
               resolve();
             } else {
               index += 1;
               if (index < urls.length) {
                 tryLoad();
               } else {
-                reject(new Error('載入 v86 引擎完成，但 V86Starter 未定義'));
+                reject(new Error('載入 v86 引擎完成，但 V86Starter / V86 未定義'));
               }
             }
           };
@@ -134,7 +134,9 @@ PiOS.app.register('vm', {
         if (preset.media === 'bzimage' && !args.file) {
           config.cmdline = 'console=ttyS0 root=/dev/sda rw init=/sbin/init';
         }
-        instance = new V86Starter(config);
+        const V86Ctor = window.V86Starter || window.V86;
+        if (!V86Ctor) throw new Error('v86 引擎載入完成，但找不到 V86Starter 或 V86');
+        instance = new V86Ctor(config);
         instance.add_listener('emulator-ready', () => setStatus('執行中', '#4f4'));
         instance.add_listener('emulator-stopped', () => setStatus('已停止', '#f44'));
       } catch (e) {
