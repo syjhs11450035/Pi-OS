@@ -197,6 +197,8 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:var(--font); 
 .api-button:hover { background:rgba(0,120,212,.9); }
 .api-slider { display:flex; align-items:center; gap:8px; }
 .api-slider span { min-width:44px; text-align:right; color:var(--text-dim); font-size:12px; }
+.wallpaper-swatch { width:110px; height:68px; border:2px solid rgba(255,255,255,.2); border-radius:6px; color:#fff; cursor:pointer; text-shadow:0 1px 4px rgba(0,0,0,.85); display:flex; align-items:flex-end; justify-content:center; padding-bottom:6px; }
+.settings-row input { padding:6px 8px; border-radius:4px; border:1px solid var(--border); background:rgba(0,0,0,.35); color:var(--text); outline:none; }
 .toggle { position:relative; width:40px; height:22px; }
 .toggle input { opacity:0; width:0; height:0; }
 .toggle-slider { position:absolute; inset:0; background:#555; border-radius:11px; cursor:pointer; transition:.3s; }

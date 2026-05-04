@@ -76,7 +76,7 @@ async function uniquePath(path) {
   throw new Error('找不到可用的檔名');
 }
 
-OS.registerApp('explorer', {
+PiOS.app.register('explorer', {
   id: 'explorer',
   get title() { return i18n.t('app:explorer.title') || '檔案總管'; },
   iconChar: 'EX',

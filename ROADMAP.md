@@ -122,12 +122,13 @@
 - [x] JSON UI renderer 第一版（panel/row/button/input/select/toggle/slider）
 
 ### Phase 2 — 內建應用程式
-- [x] 記事本（讀寫 VFS、Ctrl+S/N/O、Tab 縮排、狀態列）
-- [x] 檔案總管（目錄瀏覽、新增/刪除/重新命名、右鍵選單、側邊欄）
-- [x] 終端機（20+ 指令、Tab 補全、歷史記錄、Ctrl+C/L）
-- [x] 內建瀏覽器（iframe 沙盒、書籤管理、SVG 工具列）
-- [x] 系統設定（顯示/桌布/系統/儲存/關於，縮放、工作列位置、語言、時區、桌布、透明度、動畫、儲存與記憶體資訊可用）
-- [x] 虛擬機（v86 整合，FreeDOS / Linux / KolibriOS）
+- [x] App v2 重寫：所有內建 app 必須有真資料、真狀態、真錯誤回報，不保留空殼控制項
+- [x] 記事本 v2（VFS 讀寫、自動儲存、系統剪貼簿、下載匯出、狀態列）
+- [x] 檔案總管 v2（目錄瀏覽、新增/刪除/重新命名、跨視窗 VFS 剪貼簿、上傳/下載、圖片預覽）
+- [x] 終端機 v2（統一 `PiOS.command`、程序/剪貼簿/檔案指令、歷史記錄、Tab 補全）
+- [x] 內建瀏覽器 v2（離線首頁、多分頁、書籤、iframe 安全限制提示、pios:// 本機頁）
+- [x] 系統設定 v2（JSON UI schema 生成、PWA 安裝、顯示/桌布/系統/儲存/app 清單/關於）
+- [x] 虛擬機 v2（v86 啟動器、環境診斷、VFS ISO/IMG 載入、明確限制回報）
 - [x] 所有 app 完整三語言包（en / zh-tw / zh-cn）
 - [x] 所有 app icon.svg（彩色 Fluent 風格）
 - [x] 所有 app info.json（權限宣告）
@@ -144,7 +145,7 @@
 
 ### Phase 4 — 進階功能
 - [ ] 多使用者系統 — 登入畫面、使用者隔離
-- [x] Service Worker — PWA 離線快取基礎
+- [x] Service Worker — PWA 離線快取基礎，包含內建 app v2 程式與 metadata
 - [ ] Service Worker — 攔截 /api/ 請求，模擬後端
 - [ ] 網路模擬 — 虛擬 TCP/IP 堆疊
 - [ ] 應用程式商店 — 動態安裝第三方 app
