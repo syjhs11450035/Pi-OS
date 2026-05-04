@@ -87,6 +87,10 @@ PiOS.app.register('explorer', {
   render(body, args, winId) {
     let currentPath = args.path || '/';
     let selectedItems = [];
+    let searchFilter = '';
+    let sortKey = 'name';
+    let sortDir = 'asc';
+    let viewMode = 'grid';
     const navHistory = [currentPath];
     let histIdx = 0;
 
@@ -115,7 +119,18 @@ PiOS.app.register('explorer', {
           <!-- 搜尋 -->
           <input id="exp-search-${winId}" type="text" placeholder="搜尋..." style="width:120px;padding:3px 8px;border-radius:4px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.3);color:#eee;font-size:12px;outline:none;"
             oninput="_exp_${winId}.search(this.value)">
-          <!-- 上傳 -->
+          <select id="exp-sort-${winId}" style="width:140px;padding:3px 8px;border-radius:4px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.3);color:#eee;font-size:12px;outline:none;" onchange="_exp_${winId}.setSort(this.value)">
+            <option value="name">排序：名稱</option>
+            <option value="type">排序：類型</option>
+            <option value="modified">排序：修改時間</option>
+            <option value="size">排序：大小</option>
+          </select>
+          <button class="exp-btn" id="exp-view-${winId}" title="切換檢視模式" onclick="_exp_${winId}.toggleView()">
+            <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg>
+          </button>
+          <button class="exp-btn" title="貼上" onclick="_exp_${winId}.pasteItems()">
+            <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V6l-4-4z"/><path d="M5 2v4h4"/></svg>
+          </button>
           <button class="exp-btn" title="上傳檔案" onclick="_exp_${winId}.uploadFile()">
             <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="8 1 8 10"/><polyline points="4 5 8 1 12 5"/><path d="M2 12v2h12v-2"/></svg>
           </button>
@@ -146,7 +161,7 @@ PiOS.app.register('explorer', {
     if (!document.getElementById('exp-style')) {
       const s = document.createElement('style');
       s.id = 'exp-style';
-      s.textContent = `.exp-btn{padding:4px 7px;border:none;border-radius:4px;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;}.exp-btn:hover{background:rgba(255,255,255,.1);}.exp-btn:disabled{opacity:.3;cursor:default;}`;
+      s.textContent = `.exp-btn{padding:4px 7px;border:none;border-radius:4px;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;}.exp-btn:hover{background:rgba(255,255,255,.1);}.exp-btn:disabled{opacity:.3;cursor:default;}.explorer-files.list{display:flex;flex-direction:column;gap:4px;}.explorer-files.list .file-item{width:100%;flex-direction:row;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;background:rgba(255,255,255,.03);}.explorer-files.list .file-item .fi-icon{flex-shrink:0;}.explorer-files.list .file-item .fi-name{flex:1;text-align:left;}.explorer-files.list .file-item .fi-meta{font-size:11px;color:var(--text-dim);}.explorer-files.list .file-item .fi-name{font-size:13px;}`;
       document.head.appendChild(s);
     }
 
@@ -181,12 +196,44 @@ PiOS.app.register('explorer', {
       }).join('');
     }
 
-    let searchFilter = '';
+    function sortItems(items) {
+      const compare = (a, b) => {
+        if (a.type !== b.type) return a.type === 'dir' ? -1 : 1;
+        let valueA;
+        let valueB;
+        switch (sortKey) {
+          case 'type': valueA = a.type; valueB = b.type; break;
+          case 'modified': valueA = a.modified || 0; valueB = b.modified || 0; break;
+          case 'size': valueA = a.size || 0; valueB = b.size || 0; break;
+          default: valueA = a.name.toLowerCase(); valueB = b.name.toLowerCase();
+        }
+        if (valueA < valueB) return sortDir === 'asc' ? -1 : 1;
+        if (valueA > valueB) return sortDir === 'asc' ? 1 : -1;
+        return 0;
+      };
+      return items.slice().sort(compare);
+    }
+
+    function formatSize(bytes) {
+      if (bytes == null || bytes === 0) return '—';
+      const units = ['B', 'KB', 'MB', 'GB'];
+      let idx = 0;
+      let num = bytes;
+      while (num >= 1024 && idx < units.length - 1) {
+        num /= 1024;
+        idx++;
+      }
+      return `${num.toFixed(idx ? 1 : 0)} ${units[idx]}`;
+    }
 
     async function renderFiles() {
       const el = document.getElementById(`exp-files-${winId}`);
       const statusEl = document.getElementById(`exp-status-${winId}`);
       if (!el) return;
+      el.className = viewMode === 'list' ? 'explorer-files list' : 'explorer-files';
+      el.style.display = 'flex';
+      el.style.flexWrap = 'wrap';
+      el.style.gap = '6px';
       el.innerHTML = `<div style="color:#555;font-size:12px;padding:8px">載入中...</div>`;
       renderBreadcrumb();
       renderSidebar();
