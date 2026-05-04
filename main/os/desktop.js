@@ -72,6 +72,13 @@ const Desktop = (() => {
 
     const transparency = localStorage.getItem('pios_transparency') !== '0';
     desktop.classList.toggle('no-transparency', !transparency);
+
+    const iconSize = localStorage.getItem('pios_icon_size') || 'medium';
+    desktop.classList.toggle('icon-small', iconSize === 'small');
+    desktop.classList.toggle('icon-large', iconSize === 'large');
+
+    const iconView = localStorage.getItem('pios_icon_view') || 'icons';
+    desktop.classList.toggle('icon-list', iconView === 'list');
   }
 
   async function renderIcons() {
@@ -89,7 +96,7 @@ const Desktop = (() => {
     try {
       const files = await VFS.listDir('/Desktop');
       for (const file of files) {
-        const el = createFileIcon(file, positions);
+        const el = await createFileIcon(file, positions);
         container.appendChild(el);
       }
     } catch {}
@@ -100,12 +107,39 @@ const Desktop = (() => {
     el.className = 'desktop-icon';
     el.dataset.id = 'app:' + item.appId;
     const bg = iconBg[item.iconKey] || 'rgba(40,40,60,.6)';
-    el.innerHTML = `
-      <div class="icon-img" style="background:${bg};border-radius:10px;padding:6px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#fff;">
-        <span class="svg-icon" style="width:28px;height:28px;">${icons[item.iconKey] || ''}</span>
-      </div>
-      <div class="icon-label">${item.label}</div>
-    `;
+    const iconSize = localStorage.getItem('pios_icon_size') || 'medium';
+    const iconView = localStorage.getItem('pios_icon_view') || 'icons';
+
+    let iconSizePx, imgSizePx;
+    if (iconSize === 'small') {
+      iconSizePx = 36;
+      imgSizePx = 24;
+    } else if (iconSize === 'large') {
+      iconSizePx = 64;
+      imgSizePx = 40;
+    } else {
+      iconSizePx = 44;
+      imgSizePx = 28;
+    }
+
+    if (iconView === 'list') {
+      el.innerHTML = `
+        <div class="icon-list-item">
+          <div class="icon-img" style="background:${bg};border-radius:6px;padding:4px;width:${iconSizePx}px;height:${iconSizePx}px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;">
+            <span class="svg-icon" style="width:${imgSizePx}px;height:${imgSizePx}px;">${icons[item.iconKey] || ''}</span>
+          </div>
+          <div class="icon-label" style="margin-left:8px;">${item.label}</div>
+        </div>
+      `;
+    } else {
+      el.innerHTML = `
+        <div class="icon-img" style="background:${bg};border-radius:10px;padding:6px;width:${iconSizePx}px;height:${iconSizePx}px;display:flex;align-items:center;justify-content:center;color:#fff;">
+          <span class="svg-icon" style="width:${imgSizePx}px;height:${imgSizePx}px;">${icons[item.iconKey] || ''}</span>
+        </div>
+        <div class="icon-label">${item.label}</div>
+      `;
+    }
+
     el.addEventListener('dblclick', () => OS.launch(item.appId));
     el.addEventListener('contextmenu', e => {
       e.preventDefault(); e.stopPropagation();
@@ -119,21 +153,67 @@ const Desktop = (() => {
     return el;
   }
 
-  function createFileIcon(file, positions) {
+  async function createFileIcon(file, positions) {
     const el = document.createElement('div');
     el.className = 'desktop-icon';
     el.dataset.id = 'file:' + file.path;
     const isDir = file.type === 'dir';
-    const iconSvg = isDir
-      ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7a2 2 0 0 1 2-2h3.172a2 2 0 0 1 1.414.586l1.828 1.828A2 2 0 0 0 12.828 8H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>`
-      : getDesktopFileIcon(file.name);
-    const bg = isDir ? 'rgba(0,100,200,.4)' : 'rgba(30,30,50,.7)';
-    el.innerHTML = `
-      <div class="icon-img" style="background:${bg};border-radius:10px;padding:6px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#a0c8ff;">
-        <span class="svg-icon" style="width:28px;height:28px;">${iconSvg}</span>
-      </div>
-      <div class="icon-label">${file.name}</div>
-    `;
+    const isImage = /\.(png|jpg|jpeg|gif|svg|webp|bmp|ico)$/i.test(file.name);
+    const isVideo = /\.(mp4|webm|avi|mov|mkv)$/i.test(file.name);
+    const isAudio = /\.(mp3|wav|ogg|flac|m4a)$/i.test(file.name);
+
+    const iconSize = localStorage.getItem('pios_icon_size') || 'medium';
+    const iconView = localStorage.getItem('pios_icon_view') || 'icons';
+
+    let iconSizePx, imgSizePx;
+    if (iconSize === 'small') {
+      iconSizePx = 36;
+      imgSizePx = 24;
+    } else if (iconSize === 'large') {
+      iconSizePx = 64;
+      imgSizePx = 40;
+    } else {
+      iconSizePx = 44;
+      imgSizePx = 28;
+    }
+
+    let iconHtml;
+    if (isImage) {
+      try {
+        const previewUrl = await getFilePreviewUrl(file);
+        iconHtml = `<img class="icon-preview" src="${previewUrl}" alt="${file.name}" style="width:${imgSizePx}px;height:${imgSizePx}px;border-radius:4px;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">`;
+        iconHtml += `<span class="svg-icon" style="width:${imgSizePx}px;height:${imgSizePx}px;display:none;">${getDesktopFileIcon(file.name)}</span>`;
+      } catch {
+        iconHtml = `<span class="svg-icon" style="width:${imgSizePx}px;height:${imgSizePx}px;">${getDesktopFileIcon(file.name)}</span>`;
+      }
+    } else if (isVideo) {
+      iconHtml = `<span class="svg-icon" style="width:${imgSizePx}px;height:${imgSizePx}px;color:#ff6b6b;">${getDesktopFileIcon(file.name)}</span>`;
+    } else if (isAudio) {
+      iconHtml = `<span class="svg-icon" style="width:${imgSizePx}px;height:${imgSizePx}px;color:#4ecdc4;">${getDesktopFileIcon(file.name)}</span>`;
+    } else {
+      iconHtml = `<span class="svg-icon" style="width:${imgSizePx}px;height:${imgSizePx}px;">${getDesktopFileIcon(file.name)}</span>`;
+    }
+
+    const bg = isDir ? 'rgba(0,100,200,.4)' : isImage ? 'rgba(100,100,100,.3)' : isVideo ? 'rgba(255,107,107,.3)' : isAudio ? 'rgba(78,205,196,.3)' : 'rgba(30,30,50,.7)';
+
+    if (iconView === 'list') {
+      el.innerHTML = `
+        <div class="icon-list-item">
+          <div class="icon-img" style="background:${bg};border-radius:6px;padding:4px;width:${iconSizePx}px;height:${iconSizePx}px;display:flex;align-items:center;justify-content:center;color:#a0c8ff;flex-shrink:0;">
+            ${iconHtml}
+          </div>
+          <div class="icon-label" style="margin-left:8px;">${file.name}</div>
+        </div>
+      `;
+    } else {
+      el.innerHTML = `
+        <div class="icon-img" style="background:${bg};border-radius:10px;padding:6px;width:${iconSizePx}px;height:${iconSizePx}px;display:flex;align-items:center;justify-content:center;color:#a0c8ff;">
+          ${iconHtml}
+        </div>
+        <div class="icon-label">${file.name}</div>
+      `;
+    }
+
     el.addEventListener('dblclick', () => {
       if (isDir) OS.launch('explorer', { path: file.path });
       else openDesktopFile(file);
@@ -154,15 +234,18 @@ const Desktop = (() => {
     return el;
   }
 
-  function getDesktopFileIcon(name) {
-    const ext = name.split('.').pop().toLowerCase();
-    if (['png','jpg','jpeg','gif','svg','webp'].includes(ext))
-      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
-    if (['js','ts','py','sh','html','css','json'].includes(ext))
-      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`;
-    if (['exe','com','bin'].includes(ext))
-      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`;
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`;
+  async function getFilePreviewUrl(file) {
+    // 為圖片檔案生成預覽 URL
+    if (/\.(png|jpg|jpeg|gif|svg|webp|bmp|ico)$/i.test(file.name)) {
+      try {
+        const buf = await VFS.readBinary(file.path);
+        const blob = new Blob([buf]);
+        return URL.createObjectURL(blob);
+      } catch {
+        return ''; // 失敗時返回空字串
+      }
+    }
+    return '';
   }
 
   function openDesktopFile(file) {
@@ -270,6 +353,17 @@ const Desktop = (() => {
       showContextMenu(e.clientX, e.clientY, [
         { label: '重新整理',   action: () => renderIcons() },
         { sep: true },
+        { label: '排列圖示',   action: () => arrangeIcons() },
+        { label: '圖示大小',   submenu: [
+          { label: '小', action: () => setIconSize('small') },
+          { label: '中', action: () => setIconSize('medium') },
+          { label: '大', action: () => setIconSize('large') }
+        ]},
+        { label: '檢視方式',   submenu: [
+          { label: '圖示', action: () => setIconView('icons') },
+          { label: '清單', action: () => setIconView('list') }
+        ]},
+        { sep: true },
         { label: '新增資料夾', action: () => newFolder() },
         { label: '新增文字檔', action: () => newTextFile() },
         { label: '上傳檔案',   action: () => uploadToDesktop() },
@@ -294,6 +388,16 @@ const Desktop = (() => {
         const sep = document.createElement('div');
         sep.className = 'ctx-sep';
         menu.appendChild(sep);
+      } else if (item.submenu) {
+        const el = document.createElement('div');
+        el.className = 'ctx-item has-submenu';
+        el.textContent = item.label;
+        el.innerHTML += '<span class="submenu-arrow">▶</span>';
+        el.onclick = (e) => {
+          e.stopPropagation();
+          showSubMenu(e.clientX, e.clientY, item.submenu);
+        };
+        menu.appendChild(el);
       } else {
         const el = document.createElement('div');
         el.className = 'ctx-item';
@@ -307,6 +411,11 @@ const Desktop = (() => {
     const cy = y + mh > window.innerHeight ? y - mh : y;
     menu.style.left = cx + 'px';
     menu.style.top  = cy + 'px';
+  }
+
+  function showSubMenu(x, y, items) {
+    hideContextMenu(); // 先隱藏主選單
+    showContextMenu(x, y, items);
   }
 
   function hideContextMenu() {
@@ -341,8 +450,44 @@ const Desktop = (() => {
     input.click();
   }
 
-  function getIcon(key) {
-    return `<span class="svg-icon">${icons[key] || icons.notepad}</span>`;
+  function arrangeIcons() {
+    const positions = {};
+    const icons = document.querySelectorAll('.desktop-icon');
+    const container = document.getElementById('desktop-icons');
+    const containerRect = container.getBoundingClientRect();
+    const iconWidth = 80; // 圖示寬度
+    const iconHeight = 80; // 圖示高度
+    const cols = Math.floor(containerRect.width / iconWidth);
+    let row = 0, col = 0;
+
+    icons.forEach(icon => {
+      if (col >= cols) {
+        col = 0;
+        row++;
+      }
+      positions[icon.dataset.id] = {
+        x: col * iconWidth,
+        y: row * iconHeight
+      };
+      icon.style.position = 'absolute';
+      icon.style.left = positions[icon.dataset.id].x + 'px';
+      icon.style.top = positions[icon.dataset.id].y + 'px';
+      col++;
+    });
+
+    savePositions(positions);
+  }
+
+  function setIconSize(size) {
+    localStorage.setItem('pios_icon_size', size);
+    applyUserSettings();
+    renderIcons();
+  }
+
+  function setIconView(view) {
+    localStorage.setItem('pios_icon_view', view);
+    applyUserSettings();
+    renderIcons();
   }
 
   return { init, showContextMenu, hideContextMenu, getIcon, renderIcons, applyUserSettings };
