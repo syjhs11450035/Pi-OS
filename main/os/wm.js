@@ -118,10 +118,12 @@ const WM = (() => {
       el.style.width = r.width; el.style.height = r.height;
       el.classList.remove('maximized');
       win.state.maximized = false;
+      OS.emit('wm:restore', { id });
     } else {
       win.state.prevRect = { left: el.style.left, top: el.style.top, width: el.style.width, height: el.style.height };
       el.classList.add('maximized');
       win.state.maximized = true;
+      OS.emit('wm:maximize', { id });
     }
     focus(id);
   }

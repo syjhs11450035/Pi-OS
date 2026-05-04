@@ -31,7 +31,12 @@ const VFS = (() => {
       { path: '/Desktop', name: 'Desktop', type: 'dir', parent: '/' },
       { path: '/Documents', name: 'Documents', type: 'dir', parent: '/' },
       { path: '/Downloads', name: 'Downloads', type: 'dir', parent: '/' },
+      { path: '/Pictures', name: 'Pictures', type: 'dir', parent: '/' },
       { path: '/System', name: 'System', type: 'dir', parent: '/' },
+      { path: '/Temp', name: 'Temp', type: 'dir', parent: '/' },
+      { path: '/Apps', name: 'Apps', type: 'dir', parent: '/' },
+      { path: '/Users', name: 'Users', type: 'dir', parent: '/' },
+      { path: '/Users/User', name: 'User', type: 'dir', parent: '/Users' },
       { path: '/Documents/歡迎.txt', name: '歡迎.txt', type: 'file', parent: '/Documents',
         content: '歡迎使用 WebOS！\n\n這是一個在瀏覽器中運行的模擬作業系統。\n\n功能：\n- 虛擬檔案系統（IndexedDB 持久化）\n- 視窗管理器（拖曳、縮放、最大化）\n- 記事本、檔案總管、終端機\n- x86 虛擬機（可執行真實 Linux）\n\n祝使用愉快！', size: 0, modified: Date.now() },
     ];
@@ -133,6 +138,22 @@ const VFS = (() => {
     OS.emit('fs:change', { path: newPath, type: 'rename' });
   }
 
+  async function copy(srcPath, dstPath) {
+    const item = await get(srcPath);
+    if (!item) throw new Error('不存在: ' + srcPath);
+    const parts = dstPath.split('/');
+    const name = parts.pop();
+    const parent = parts.join('/') || '/';
+    await put({ ...item, path: dstPath, name, parent, created: Date.now(), modified: Date.now() });
+    if (item.type === 'dir') {
+      const children = await listDir(srcPath);
+      for (const child of children) {
+        await copy(child.path, dstPath + child.path.slice(srcPath.length));
+      }
+    }
+    OS.emit('fs:change', { path: dstPath, type: 'copy' });
+  }
+
   async function renameChildren(oldParent, newParent) {
     const children = await listDir(oldParent);
     for (const child of children) {
@@ -174,5 +195,5 @@ const VFS = (() => {
     return new TextEncoder().encode(f.content || '').buffer;
   }
 
-  return { init, ensureDefaults, readFile, writeFile, mkdir, remove, rename, exists, listDir, readBinary, writeBinary, get };
+  return { init, ensureDefaults, readFile, writeFile, mkdir, remove, rename, copy, exists, listDir, readBinary, writeBinary, get };
 })();

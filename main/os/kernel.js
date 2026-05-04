@@ -5,6 +5,9 @@
 const OS = (() => {
   const apps      = {};
   const listeners = {};
+  const processes = {};
+  let pidCounter  = 100;
+  let clipboard   = null;
 
   // 事件匯流排
   function emit(event, data) {
@@ -21,6 +24,7 @@ const OS = (() => {
   }
 
   function getApps() { return apps; }
+  function getProcesses() { return { ...processes }; }
 
   /**
    * 啟動應用程式
@@ -40,9 +44,73 @@ const OS = (() => {
       }
     }
 
-    WM.open(app, args);
+    const winId = WM.open(app, args);
+    const pid = ++pidCounter;
+    processes[winId] = {
+      pid,
+      winId,
+      appId: id,
+      title: app.title || id,
+      args,
+      started: Date.now(),
+      state: 'running'
+    };
     StartMenu.hide();
-    emit('app:launch', { id, args });
+    emit('app:launch', { id, args, winId, pid });
+    emit('process:start', processes[winId]);
+    return winId;
+  }
+
+  function kill(pidOrWinId) {
+    const entry = Object.values(processes).find(p => String(p.pid) === String(pidOrWinId) || p.winId === pidOrWinId);
+    if (!entry) return false;
+    WM.close(entry.winId);
+    return true;
+  }
+
+  function notify(title, body = '', opts = {}) {
+    const center = document.getElementById('notification-center');
+    if (!center) return;
+    const toast = document.createElement('div');
+    toast.className = 'os-toast';
+    toast.innerHTML = `
+      <div class="os-toast-title">${escapeHtml(title)}</div>
+      ${body ? `<div class="os-toast-body">${escapeHtml(body)}</div>` : ''}
+    `;
+    toast.onclick = () => toast.remove();
+    center.appendChild(toast);
+    setTimeout(() => toast.remove(), opts.timeout || 4200);
+    emit('system:notify', { title, body });
+  }
+
+  async function writeClipboard(data) {
+    clipboard = data;
+    if (typeof data === 'string' && navigator.clipboard) {
+      try { await navigator.clipboard.writeText(data); } catch {}
+    }
+    emit('clipboard:write', { data });
+  }
+
+  async function readClipboard() {
+    if (navigator.clipboard) {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text) clipboard = text;
+      } catch {}
+    }
+    return clipboard;
+  }
+
+  function setSetting(key, value) {
+    localStorage.setItem('pios_' + key, JSON.stringify(value));
+    emit('setting:change', { key, value });
+  }
+
+  function getSetting(key, fallback = null) {
+    try {
+      const raw = localStorage.getItem('pios_' + key);
+      return raw === null ? fallback : JSON.parse(raw);
+    } catch { return fallback; }
   }
 
   function _showSecurityAlert(appId, reason) {
@@ -73,5 +141,18 @@ const OS = (() => {
     setTimeout(() => Boot.start(), 500);
   }
 
-  return { emit, on, registerApp, getApps, launch, shutdown, restart };
+  on('wm:close', ({ id }) => {
+    const process = processes[id];
+    if (!process) return;
+    delete processes[id];
+    emit('process:exit', process);
+  });
+  on('wm:minimize', ({ id }) => { if (processes[id]) processes[id].state = 'minimized'; });
+  on('wm:restore', ({ id }) => { if (processes[id]) processes[id].state = 'running'; });
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  }
+
+  return { emit, on, registerApp, getApps, getProcesses, launch, kill, notify, writeClipboard, readClipboard, setSetting, getSetting, shutdown, restart };
 })();

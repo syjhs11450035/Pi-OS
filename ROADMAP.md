@@ -6,6 +6,8 @@
 
 > ROADMAP.md 是唯一權威文件；原 `Files.md` 與 `代辦事項清單.md` 的內容已整合於此。
 
+> App 開發規格與統一 API 詳見 `/開發手冊.md`。
+
 用戶的命令/建議:
 ```text
 希望在跟目錄(這裡定義為工作區，md給你存一竊你知道的資料和你的發想...)建立一個server.py(main.py)用來架設網頁伺服器，最好先php化可以放到託管以及公網可連線...
@@ -29,6 +31,8 @@
 - `/api/user/` 放登入、註冊等使用者 API 模擬資料。
 - `/api/file/` 放預設桌面、桌布、使用者、安裝環境等共用預設資料。
 - 所有前端資源路徑需盡量使用相對路徑，避免 GitHub Pages 子路徑部署失效。
+- 新 app 可選擇 JSON UI Schema 或自寫 HTML/JS 兩種模式；JSON UI 由 `PiOS.ui` 生成，手寫 HTML 仍必須使用統一 API。
+- 系統能力必須先進 `PiOS.*` 統一 API，再提供給 app 使用，避免每個 app 各自呼叫底層模組。
 
 ### 虛擬檔案系統目錄規劃
 
@@ -112,6 +116,8 @@
 - [x] 多語言系統 (i18n)（en / zh-tw / zh-cn，擴充包優先）
 - [x] πOS 品牌 Logo SVG（Fluent Design 風格）
 - [x] 全 SVG 圖示系統（無 emoji）
+- [x] `PiOS.*` 統一 API 基底（fs/app/window/process/clipboard/settings/ui/system/command）
+- [x] JSON UI renderer 第一版（panel/row/button/input/select/toggle/slider）
 
 ### Phase 2 — 內建應用程式
 - [x] 記事本（讀寫 VFS、Ctrl+S/N/O、Tab 縮排、狀態列）
@@ -139,6 +145,8 @@
 - [ ] Service Worker — 攔截 /api/ 請求，模擬後端
 - [ ] 網路模擬 — 虛擬 TCP/IP 堆疊
 - [ ] 應用程式商店 — 動態安裝第三方 app
+- [x] App JSON UI Schema 第一版 — 讓 app 可用 JSON 定義 UI
+- [ ] 開發者工具與 App Builder
 - [ ] 本機檔案存取 — File System Access API
 - [ ] PWA 支援 — 可安裝為桌面應用程式
 - [ ] 多視窗虛擬桌面 — 類 Windows 虛擬桌面

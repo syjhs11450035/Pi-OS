@@ -51,18 +51,7 @@ OS.registerApp('terminal', {
       out.scrollTop = out.scrollHeight;
     }
 
-    function parseArgs(raw) {
-      const tokens = [];
-      let cur = '', inQ = false, qChar = '';
-      for (const c of raw) {
-        if (inQ) { if (c === qChar) inQ = false; else cur += c; }
-        else if (c === '"' || c === "'") { inQ = true; qChar = c; }
-        else if (c === ' ') { if (cur) { tokens.push(cur); cur = ''; } }
-        else cur += c;
-      }
-      if (cur) tokens.push(cur);
-      return tokens;
-    }
+    function parseArgs(raw) { return PiOS.command.parseArgs(raw); }
 
     function resolvePath(p) {
       if (!p || p === '~') return env.HOME;
@@ -91,13 +80,13 @@ OS.registerApp('terminal', {
         print('  mkdir <目錄>        — 建立目錄');
         print('  touch <檔案>        — 建立空檔案');
         print('  rm [-r] <路徑>      — 刪除檔案/目錄');
-        print('  cp <來源> <目標>    — 複製檔案');
+        print('  cp <來源> <目標>    — 複製檔案或資料夾');
         print('  mv <來源> <目標>    — 移動/重新命名');
         print('  write <檔案> <內容> — 寫入檔案');
         print('  clear               — 清除畫面');
         print('  env                 — 顯示環境變數');
         print('  export K=V          — 設定環境變數');
-        print('  open <應用程式>     — 開啟應用程式');
+        print('  open <應用程式|檔案> — 開啟應用程式或檔案');
         print('  sysinfo             — 系統資訊');
         print('  date                — 顯示日期時間');
         print('  whoami              — 顯示使用者');
@@ -185,8 +174,7 @@ OS.registerApp('terminal', {
         if (args.length < 2) { print('用法：cp <來源> <目標>', 't-err'); return; }
         const src = resolvePath(args[0]), dst = resolvePath(args[1]);
         try {
-          const content = await VFS.readFile(src);
-          await VFS.writeFile(dst, content);
+          await VFS.copy(src, dst);
           print(`已複製：${src} -> ${dst}`, 't-ok');
         } catch (e) { print('cp: ' + e.message, 't-err'); }
       },
@@ -217,8 +205,15 @@ OS.registerApp('terminal', {
         print(`已設定 ${k}=${env[k]}`, 't-ok');
       },
 
-      open(args) {
-        if (!args[0]) { print('用法：open <應用程式ID>', 't-err'); return; }
+      async open(args) {
+        if (!args[0]) { print('用法：open <應用程式ID|檔案>', 't-err'); return; }
+        const maybePath = resolvePath(args[0]);
+        const item = await VFS.get(maybePath);
+        if (item) {
+          if (item.type === 'dir') OS.launch('explorer', { path: item.path });
+          else openFile(item);
+          return;
+        }
         OS.launch(args[0]);
       },
 
@@ -251,16 +246,20 @@ OS.registerApp('terminal', {
 
       printHTML(`<span style="color:#4af">user@pios:${cwd} $</span> ${escapeHtml(trimmed)}`);
 
-      const tokens = parseArgs(trimmed);
-      const cmd = tokens[0];
-      const cmdArgs = tokens.slice(1).map(a => a.replace(/\$(\w+)/g, (_, k) => env[k] || ''));
-
-      if (commands[cmd]) {
-        try { await commands[cmd](cmdArgs); }
-        catch (e) { print(`${cmd}: 執行錯誤 — ${e.message}`, 't-err'); }
-      } else {
-        print(`${cmd}: 找不到指令。輸入 help 查看可用指令。`, 't-err');
+      const expanded = trimmed.replace(/\$(\w+)/g, (_, k) => env[k] || '');
+      const result = await PiOS.command.exec(expanded, {
+        cwd,
+        env,
+        setCwd(path) {
+          cwd = path;
+          updatePrompt();
+        }
+      });
+      if (result.clear) {
+        out.innerHTML = '';
+        return;
       }
+      if (result.output) result.output.split('\n').forEach(line => print(line, result.code === 0 ? '' : 't-err'));
     }
 
     function escapeHtml(s) {

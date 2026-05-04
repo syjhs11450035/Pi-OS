@@ -54,6 +54,28 @@ function _showImageViewer(item) {
   }).catch(() => alert('無法讀取圖片'));
 }
 
+async function copyVfsItem(item, destPath) {
+  if (await VFS.exists(destPath)) {
+    destPath = await uniquePath(destPath);
+  }
+  await VFS.copy(item.path, destPath);
+}
+
+async function uniquePath(path) {
+  if (!(await VFS.exists(path))) return path;
+  const slash = path.lastIndexOf('/');
+  const dir = slash <= 0 ? '/' : path.slice(0, slash);
+  const name = path.slice(slash + 1);
+  const dot = name.lastIndexOf('.');
+  const base = dot > 0 ? name.slice(0, dot) : name;
+  const ext = dot > 0 ? name.slice(dot) : '';
+  for (let i = 2; i < 1000; i++) {
+    const candidate = (dir === '/' ? '' : dir) + '/' + `${base} (${i})${ext}`;
+    if (!(await VFS.exists(candidate))) return candidate;
+  }
+  throw new Error('找不到可用的檔名');
+}
+
 OS.registerApp('explorer', {
   id: 'explorer',
   get title() { return i18n.t('app:explorer.title') || '檔案總管'; },
@@ -229,8 +251,8 @@ OS.registerApp('explorer', {
         { label: '開啟',     action: () => isDir ? navigate(item.path) : openFile(item) },
         ...(isDir ? [] : [{ label: '下載到本機', action: () => downloadItem(item) }]),
         { sep: true },
-        { label: '複製',     action: () => _clipboard = { op:'copy', items: [...selectedItems] } },
-        { label: '剪下',     action: () => _clipboard = { op:'cut',  items: [...selectedItems] } },
+        { label: '複製',     action: () => PiOS.clipboard.write({ type:'vfs-items', op:'copy', items: [...selectedItems] }) },
+        { label: '剪下',     action: () => PiOS.clipboard.write({ type:'vfs-items', op:'cut',  items: [...selectedItems] }) },
         { label: '貼上',     action: () => pasteItems() },
         { sep: true },
         { label: '重新命名', action: () => renameItem(item) },
@@ -240,23 +262,17 @@ OS.registerApp('explorer', {
       ]);
     }
 
-    let _clipboard = null;
-
     async function pasteItems() {
-      if (!_clipboard) return;
-      for (const item of _clipboard.items) {
+      const clip = await PiOS.clipboard.read();
+      if (!clip || clip.type !== 'vfs-items') return;
+      for (const item of clip.items) {
         const dest = currentPath + (currentPath.endsWith('/') ? '' : '/') + item.name;
         try {
-          if (item.type === 'file') {
-            const content = await VFS.readFile(item.path);
-            await VFS.writeFile(dest, content);
-            if (_clipboard.op === 'cut') await VFS.remove(item.path);
-          } else {
-            await VFS.mkdir(dest);
-          }
+          if (clip.op === 'cut') await VFS.rename(item.path, await uniquePath(dest));
+          else await copyVfsItem(item, dest);
         } catch (e) { alert('貼上失敗：' + e.message); }
       }
-      if (_clipboard.op === 'cut') _clipboard = null;
+      if (clip.op === 'cut') await PiOS.clipboard.write(null);
       renderFiles();
     }
 
@@ -386,7 +402,12 @@ OS.registerApp('explorer', {
         bc.style.display = '';
         inp.style.display = 'none';
         const val = inp.value.trim();
-        if (val && val !== currentPath) navigate(val);
+        if (val && val !== currentPath) {
+          VFS.get(val).then(item => {
+            if (!item || item.type !== 'dir') alert('路徑不存在或不是資料夾：' + val);
+            else navigate(val);
+          });
+        }
       },
       cancelPath() {
         const bc = document.getElementById(`exp-breadcrumb-${winId}`);

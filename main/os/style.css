@@ -124,6 +124,14 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:var(--font); 
 .ctx-item:hover { background:rgba(255,255,255,.1); }
 .ctx-sep { height:1px; background:var(--border); margin:4px 0; }
 
+/* Notifications */
+#notification-center { position:absolute; right:12px; bottom:calc(var(--taskbar-h) + 12px); z-index:3000; display:flex; flex-direction:column; gap:8px; width:min(340px, calc(100vw - 24px)); pointer-events:none; }
+#desktop.taskbar-top #notification-center { top:calc(var(--taskbar-h) + 12px); bottom:auto; }
+.os-toast { pointer-events:all; padding:12px 14px; border:1px solid var(--border); border-radius:8px; background:rgba(24,24,36,.96); box-shadow:var(--shadow); color:var(--text); animation:toastIn .18s ease-out; }
+.os-toast-title { font-size:13px; font-weight:600; margin-bottom:4px; }
+.os-toast-body { font-size:12px; color:var(--text-dim); line-height:1.45; white-space:pre-wrap; }
+@keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
 /* Explorer */
 .explorer-wrap { display:flex; height:100%; }
 .explorer-sidebar { width:160px; border-right:1px solid var(--border); padding:8px; overflow-y:auto; flex-shrink:0; }
@@ -183,6 +191,12 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:var(--font); 
 .settings-row label { font-size:13px; }
 .settings-row input[type=range] { width:120px; accent-color:var(--accent); }
 .settings-row select { padding:4px 8px; border-radius:4px; border:1px solid var(--border); background:rgba(0,0,0,.5); color:var(--text); font-size:12px; }
+.api-panel { display:flex; flex-direction:column; gap:0; }
+.api-row-content { display:flex; align-items:center; gap:8px; }
+.api-button { padding:6px 12px; border:none; border-radius:4px; background:rgba(0,120,212,.65); color:#fff; font-size:12px; cursor:pointer; }
+.api-button:hover { background:rgba(0,120,212,.9); }
+.api-slider { display:flex; align-items:center; gap:8px; }
+.api-slider span { min-width:44px; text-align:right; color:var(--text-dim); font-size:12px; }
 .toggle { position:relative; width:40px; height:22px; }
 .toggle input { opacity:0; width:0; height:0; }
 .toggle-slider { position:absolute; inset:0; background:#555; border-radius:11px; cursor:pointer; transition:.3s; }
