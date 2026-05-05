@@ -10,6 +10,12 @@
     "settings",
     "calculator",
     "games",
-    "store"
+    "store",
+    "applist"
+  ],
+  "hidden": [
+    "2048",
+    "minesweeper",
+    "solitaire"
   ]
 }

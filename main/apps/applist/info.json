@@ -1,0 +1,10 @@
+{
+  "id": "applist",
+  "name": "應用清單",
+  "description": "查看和管理所有應用，包括隱藏應用",
+  "version": "1.0.0",
+  "author": "πOS Team",
+  "category": "系統",
+  "entry": "app.js",
+  "hidden": false
+}

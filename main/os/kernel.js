@@ -20,6 +20,10 @@ const OS = (() => {
 
   // 登錄應用程式（由 app.js 呼叫）
   function registerApp(id, def) {
+    // 檢查應用是否在隱藏列表中
+    if (typeof AppLoader !== 'undefined' && AppLoader.isHidden && AppLoader.isHidden(id)) {
+      def.hidden = true;
+    }
     apps[id] = def;
   }
 

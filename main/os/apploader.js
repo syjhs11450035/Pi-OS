@@ -34,6 +34,8 @@ const AppLoader = (() => {
   const _registry = {};   // id → info
   // 已授權的 app
   const _granted  = new Set();
+  // 隱藏應用列表
+  let _hiddenApps = [];
 
   // 內建 app 清單（不需要動態載入，直接從 apps/ 讀取）
   const BUILTIN_IDS = ['explorer', 'notepad', 'terminal', 'browser', 'vm', 'settings'];
@@ -49,11 +51,15 @@ const AppLoader = (() => {
       if (res.ok) {
         const data = await res.json();
         ids = data.apps || BUILTIN_IDS;
+        _hiddenApps = data.hidden || [];
       }
     } catch {}
 
     // 並行載入所有 app
     await Promise.all(ids.map(id => loadApp(id)));
+    
+    // 載入隱藏應用
+    await Promise.all(_hiddenApps.map(id => loadApp(id)));
   }
 
   /**
@@ -179,6 +185,8 @@ const AppLoader = (() => {
 
   function getInfo(id)      { return _registry[id] || null; }
   function getRegistry()    { return { ..._registry }; }
+  function isHidden(id)     { return _hiddenApps.includes(id); }
+  function getHiddenApps()  { return [..._hiddenApps]; }
 
-  return { init, loadApp, fetchIcon, hasPermission, checkLaunch, grant, getInfo, getRegistry };
+  return { init, loadApp, fetchIcon, hasPermission, checkLaunch, grant, getInfo, getRegistry, isHidden, getHiddenApps };
 })();

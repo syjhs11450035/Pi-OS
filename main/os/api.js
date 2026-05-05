@@ -48,7 +48,23 @@ const PiOS = (() => {
   const app = {
     register: (id, def) => OS.registerApp(id, def),
     launch: (id, args = {}) => OS.launch(id, args),
-    list: () => OS.getApps(),
+    list: () => {
+      const allApps = OS.getApps();
+      return Object.values(allApps).filter(app => !app.hidden);
+    },
+    listAll: () => {
+      const allApps = OS.getApps();
+      return Object.values(allApps).map(app => ({
+        id: app.id,
+        title: app.title,
+        name: app.name,
+        desc: app.desc,
+        description: app.description,
+        hidden: app.hidden || false,
+        iconChar: app.iconChar,
+        iconSvg: app.iconSvg,
+      }));
+    },
     info: id => AppLoader.getInfo(id),
   };
 
