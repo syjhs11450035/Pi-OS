@@ -191,18 +191,20 @@ const StartMenu = (() => {
     if (!container) return;
     const apps = OS.getApps();
     container.innerHTML = '';
-    Object.entries(apps).forEach(([id, app]) => {
-      const title = typeof app.title === 'function' ? app.title() : (app.title || id);
-      if (filter && !title.toLowerCase().includes(filter.toLowerCase())) return;
+    
+    // 只顯示應用清單（應用菜單）
+    const applistApp = apps['applist'];
+    if (applistApp) {
+      const title = typeof applistApp.title === 'function' ? applistApp.title() : (applistApp.title || 'applist');
       const item = document.createElement('div');
       item.className = 'start-app-item';
-      const iconHtml = app.iconSvg
-        ? `<span class="app-icon svg-icon">${app.iconSvg}</span>`
-        : `<span class="app-icon app-icon-text">${app.iconChar || '?'}</span>`;
+      const iconHtml = applistApp.iconSvg
+        ? `<span class="app-icon svg-icon">${applistApp.iconSvg}</span>`
+        : `<span class="app-icon app-icon-text">${applistApp.iconChar || '📋'}</span>`;
       item.innerHTML = `${iconHtml}<span class="app-name">${title}</span>`;
-      item.onclick = () => OS.launch(id);
+      item.onclick = () => OS.launch('applist');
       container.appendChild(item);
-    });
+    }
   }
 
   function search(val) { renderApps(val); }

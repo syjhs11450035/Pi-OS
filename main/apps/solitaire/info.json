@@ -1,0 +1,10 @@
+{
+  "id": "solitaire",
+  "name": "接龍",
+  "description": "撲克牌遊戲",
+  "version": "1.0.0",
+  "author": "πOS Team",
+  "category": "遊戲",
+  "entry": "app.js",
+  "hidden": true
+}

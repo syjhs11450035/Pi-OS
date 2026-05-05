@@ -1,0 +1,10 @@
+{
+  "id": "2048",
+  "name": "2048",
+  "description": "數字合併遊戲",
+  "version": "1.0.0",
+  "author": "πOS Team",
+  "category": "遊戲",
+  "entry": "app.js",
+  "hidden": true
+}

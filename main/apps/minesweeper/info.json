@@ -1,0 +1,10 @@
+{
+  "id": "minesweeper",
+  "name": "踩地雷",
+  "description": "經典邏輯遊戲",
+  "version": "1.0.0",
+  "author": "πOS Team",
+  "category": "遊戲",
+  "entry": "app.js",
+  "hidden": true
+}
